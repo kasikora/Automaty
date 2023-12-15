@@ -1,1 +1,1 @@
-# Automaty69
+# Automaty
