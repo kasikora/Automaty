@@ -1,5 +1,7 @@
 import numpy
 
+numpy.set_printoptions(linewidth=256)
+
 
 def omnipresent_perception(neighbours_to_survive_min=2, neighbours_to_survive_max=3, neighbours_to_become_alive_max=3, neighbours_to_become_alive_min=3, position_of_me=[1, 1]):
     n = 3
@@ -55,15 +57,15 @@ def ar_insert(matrix, arToInsert, posi, posj):
 ## example of use
 N = 30
 
-#wymuszam poczotkowy stan
+# wymuszam poczotkowy stan
 matrix = numpy.zeros((N, N)).astype(numpy.int16)
 testarr = numpy.array([[0, 1, 0, 0], [0, 0, 1, 0], [1, 1, 1, 0], [0, 0, 0, 1], [0, 0, 0, 0]])
 ar_insert(matrix, testarr, 10, 10)
 
 # wlasciwa czesc
-data=omnipresent_perception() # mozna podac argumety zeby zmnienic zasady gry
-dead_or_alive=data[0]
-arr=data[1]
+data = omnipresent_perception()  # mozna podac argumety zeby zmnienic zasady gry
+dead_or_alive = data[0]
+arr = data[1]
 print(matrix)
 for i in range(50):
     matrix = next_matrix(matrix, N, dead_or_alive, arr)
