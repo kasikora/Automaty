@@ -1,5 +1,4 @@
 import random
-
 import numpy
 
 numpy.set_printoptions(linewidth=256)
@@ -21,11 +20,21 @@ class Grain:
         return f"{self.val}"
 
     def fall(self):
-        if self.center.val:
-            pass
-        else:
-            self.center.val = 1
-            self.val = 0
+        try:
+            if self.center.val:
+                if -self.left.val + 1 or -self.right.val + 1:
+                    self.val = 0
+                    chosen_one = random.choices([self.left, self.right], weights=[-self.left.val + 1, -self.right.val + 1], k=1)[0]
+                    chosen_one.val = 1
+                    return chosen_one
+                else:
+                    return self
+            else:
+                self.val = 0
+                self.center.val = 1
+                return self.center
+        except:
+            return self
 
 
 matrix = numpy.empty((N, N), dtype=Grain)
@@ -46,7 +55,7 @@ for i in range(10):
         matrix[i, j + 10].val = 1
         all_sand.append(matrix[i, j + 10])
 print("\n", matrix)
-all_sand.reverse()
+# all_sand.reverse()
 print(all_sand)
 
 
@@ -55,12 +64,13 @@ def let_them_fall(all_sand):
     for i in all_sand:
         try:
             if i.center.val:
-                if -i.left.val+1 or -i.right.val+1:
-                    chosen_one = random.choices([i.left, i.right], weights=[-i.left.val+1, -i.right.val+1], k=1)[0]
+                if -i.left.val + 1 or -i.right.val + 1:
+                    i.val = 0
+                    chosen_one = random.choices([i.left, i.right], weights=[-i.left.val + 1, -i.right.val + 1], k=1)[0]
                     chosen_one.val = 1
                     new_sand.append(chosen_one)
                 else:
-                    pass
+                    new_sand.append(i)
             else:
                 i.val = 0
                 i.center.val = 1
@@ -70,10 +80,25 @@ def let_them_fall(all_sand):
     return new_sand
 
 
+def let_them_fall2(all_send):
+    new_sand = []
+    while len(all_sand):
+        ten = random.randint(0, len(all_sand)-1)
+        new_sand.append(all_sand[ten].fall())
+        all_sand.pop(ten)
+    return new_sand
+
+
+# matrix[0, 3].val = 1
+# matrix[0, 3].left.val = 1
+# matrix[0, 3].center.val = 1
+# matrix[0, 3].right.val = 1
+# print(matrix)
+
 for i in range(50):
-    all_sand = let_them_fall(all_sand)
+    all_sand = let_them_fall2(all_sand)
     print("\n", i, "\n", matrix)
-    #print(len(all_sand))
+    # print(len(all_sand))
 
 # matrix = []
 #
@@ -95,4 +120,4 @@ for i in range(50):
 # print(tab)
 
 
-print(~1+2, ~0+2)
+print(~1 + 2, ~0 + 2)
