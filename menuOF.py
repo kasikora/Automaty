@@ -17,7 +17,6 @@ pygame.display.set_caption("Automaty")
 black = (0, 0, 0)
 white = (200, 200, 200)
 grey = (169, 169, 169)
-yellow = (204, 204, 0)
 
 # Initialize matrix and game of life parameters
 matrix = numpy.zeros((N, N)).astype(numpy.int16)
@@ -54,27 +53,19 @@ while True:
         if event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE:
             matrix = next_matrix(matrix, N, dead_or_alive, arr)
 
+    window.fill(white)
 
-    window.fill(grey)
+    # Draw grid lines
+    for i in range(N + 1):
+        pygame.draw.line(window, grey, (i * cell_size, 0), (i * cell_size, height), 2)
+        pygame.draw.line(window, grey, (0, i * cell_size), (width, i * cell_size), 2)
 
-    # Draw background grid with slightly thinner grey borders
-    for i in range(N):
-        for j in range(N):
-            rect_outer = pygame.Rect(j * cell_size, i * cell_size, cell_size, cell_size)
-            pygame.draw.rect(window, grey, rect_outer, 1)  # Draw slightly thinner grey border
-
-            rect_inner = pygame.Rect(j * cell_size + 1, i * cell_size + 1, cell_size - 2, cell_size - 2)
-            pygame.draw.rect(window, white, rect_inner)  # Draw white rectangle
-
-    # Draw live cells with slightly thinner white borders
+    # Draw live cells without borders
     for i in range(N):
         for j in range(N):
             if matrix[i, j] == 1:
-                rect_outer = pygame.Rect(j * cell_size, i * cell_size, cell_size, cell_size)
-                pygame.draw.rect(window, grey, rect_outer, 1)  # Draw slightly thinner grey border
-
-                rect_inner = pygame.Rect(j * cell_size + 2, i * cell_size + 2, cell_size - 4, cell_size - 4)
-                pygame.draw.rect(window, black, rect_inner)  # Draw black rectangle
+                rect = pygame.Rect(j * cell_size, i * cell_size, cell_size, cell_size)
+                pygame.draw.rect(window, black, rect)
 
     # Update the display
     pygame.display.flip()
