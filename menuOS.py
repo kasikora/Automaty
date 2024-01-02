@@ -46,7 +46,7 @@ drawing = False
 
 continuos_sim = 0
 tick = 30
-
+press = 0
 
 # Run the game loop
 while True:
@@ -61,13 +61,14 @@ while True:
                 x, y = event.pos
                 col = x // cell_size % N
                 row = y // cell_size % N
-                matrix[row, col].val = 1
+                matrix[row, col].val =- matrix[row, col].val + 1
                 all_sand.append(matrix[row, col])
+                print (matrix[row, col])
         elif event.type == pygame.MOUSEMOTION and drawing:
             x, y = event.pos
             col = x // cell_size % N
             row = y // cell_size % N
-            matrix[row, col].val  = 1
+            matrix[row, col].val =- matrix[row, col].val + 1
             all_sand.append(matrix[row, col])
         elif event.type == pygame.MOUSEBUTTONUP:
             if event.button == 1:

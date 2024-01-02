@@ -21,6 +21,7 @@ class Grain:
 
     def fall(self):
         try:
+
             if self.center.val:
                 if -self.left.val + 1 or -self.right.val + 1:
                     self.val = 0
@@ -35,6 +36,7 @@ class Grain:
                 return self.center
         except:
             return self
+
 
 
 matrix = numpy.empty((N, N), dtype=Grain)
@@ -80,7 +82,7 @@ def let_them_fall(all_sand):
     return new_sand
 
 
-def let_them_fall2(all_send):
+def let_them_fall2(all_sand):
     new_sand = []
     while len(all_sand):
         ten = random.randint(0, len(all_sand)-1)

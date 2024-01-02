@@ -7,8 +7,8 @@ from game_of_life_alg import omnipresent_perception, next_matrix, ar_insert
 pygame.init()
 
 # Set up the window
-cell_size = 5
-N = 300
+cell_size = 30
+N = 30
 width, height = N * cell_size, N * cell_size
 window = pygame.display.set_mode((width, height))
 pygame.display.set_caption("Game Of Life")
