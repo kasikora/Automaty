@@ -7,8 +7,10 @@ from game_of_life_alg import omnipresent_perception, next_matrix, ar_insert
 pygame.init()
 
 # Set up the window
-cell_size = 30
-N = 30
+cell_size = 10
+N = 100
+# slow = 30
+# fast = 60
 width, height = N * cell_size, N * cell_size
 window = pygame.display.set_mode((width, height))
 pygame.display.set_caption("Game Of Life")
@@ -63,11 +65,11 @@ while True:
 
         if event.type == pygame.KEYDOWN and event.key == pygame.K_F10:
             continuos_sim =- continuos_sim + 1
-            match tick:
-                case 5:
-                    tick = 50
-                case 50:
-                    tick = 5
+            # match tick:
+            #     case slow:
+            #         tick = fast
+            #     case fast:
+            #         tick = slow
 
 
     if continuos_sim == 1:

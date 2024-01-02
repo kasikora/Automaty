@@ -41,6 +41,8 @@ print("\n", matrix)
 # all_sand.reverse()
 print(all_sand)
 
+all_sand = new_alive_list(matrix)
+
 # Variable to track mouse state
 drawing = False
 
@@ -61,15 +63,19 @@ while True:
                 x, y = event.pos
                 col = x // cell_size % N
                 row = y // cell_size % N
-                matrix[row, col].val =- matrix[row, col].val + 1
+                matrix[row, col].val = - matrix[row, col].val + 1
                 all_sand.append(matrix[row, col])
-                print (matrix[row, col])
+                print(matrix[row, col])
+                all_sand = new_alive_list(matrix)#cos
+
         elif event.type == pygame.MOUSEMOTION and drawing:
             x, y = event.pos
             col = x // cell_size % N
             row = y // cell_size % N
-            matrix[row, col].val =- matrix[row, col].val + 1
+            matrix[row, col].val = - matrix[row, col].val + 1
             all_sand.append(matrix[row, col])
+            all_sand = new_alive_list(matrix)#cos
+
         elif event.type == pygame.MOUSEBUTTONUP:
             if event.button == 1:
                 drawing = False
@@ -80,8 +86,7 @@ while True:
             all_sand = let_them_fall2(all_sand)
 
         if event.type == pygame.KEYDOWN and event.key == pygame.K_F10:
-            continuos_sim =- continuos_sim + 1
-
+            continuos_sim = - continuos_sim + 1
 
     if continuos_sim == 1:
         all_sand = let_them_fall2(all_sand)

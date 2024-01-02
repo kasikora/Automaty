@@ -38,7 +38,6 @@ class Grain:
             return self
 
 
-
 matrix = numpy.empty((N, N), dtype=Grain)
 for i in range(N):
     for j in range(N):
@@ -60,6 +59,14 @@ print("\n", matrix)
 # all_sand.reverse()
 print(all_sand)
 
+
+def new_alive_list(matrix):
+    all_sand = []
+    for i in range(N):
+        for j in range(N):
+            if matrix[i, j].val:
+                all_sand.append(matrix[i, j])
+    return all_sand
 
 def let_them_fall(all_sand):
     new_sand = []
@@ -85,7 +92,7 @@ def let_them_fall(all_sand):
 def let_them_fall2(all_sand):
     new_sand = []
     while len(all_sand):
-        ten = random.randint(0, len(all_sand)-1)
+        ten = random.randint(0, len(all_sand) - 1)
         new_sand.append(all_sand[ten].fall())
         all_sand.pop(ten)
     return new_sand
