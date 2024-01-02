@@ -7,11 +7,11 @@ from game_of_life_alg import omnipresent_perception, next_matrix, ar_insert
 pygame.init()
 
 # Set up the window
-cell_size = 30
-N = 30
+cell_size = 5
+N = 300
 width, height = N * cell_size, N * cell_size
-window = pygame.display.set_mode((width, height + 40))
-pygame.display.set_caption("Automaty")
+window = pygame.display.set_mode((width, height))
+pygame.display.set_caption("Game Of Life")
 
 # Set up colors
 black = (0, 0, 0)
@@ -29,29 +29,49 @@ arr = data[1]
 # Variable to track mouse state
 drawing = False
 
+continuos_sim = 0
+tick = 50
+
+
 # Run the game loop
 while True:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             pygame.quit()
             sys.exit()
-
         # Handle mouse events for drawing live cells
         if event.type == pygame.MOUSEBUTTONDOWN:
             if event.button == 1:
                 drawing = True
+                x, y = event.pos
+                col = x // cell_size % N
+                row = y // cell_size % N
+                matrix[row, col] = 1
         elif event.type == pygame.MOUSEMOTION and drawing:
             x, y = event.pos
-            col = x // cell_size
-            row = y // cell_size
+            col = x // cell_size % N
+            row = y // cell_size % N
             matrix[row, col] = 1
         elif event.type == pygame.MOUSEBUTTONUP:
             if event.button == 1:
                 drawing = False
 
         # Handle SPACE key to run the simulation
+
         if event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE:
             matrix = next_matrix(matrix, N, dead_or_alive, arr)
+
+        if event.type == pygame.KEYDOWN and event.key == pygame.K_F10:
+            continuos_sim =- continuos_sim + 1
+            match tick:
+                case 5:
+                    tick = 50
+                case 50:
+                    tick = 5
+
+
+    if continuos_sim == 1:
+        matrix = next_matrix(matrix, N, dead_or_alive, arr)
 
     window.fill(white)
 
@@ -60,15 +80,15 @@ while True:
         pygame.draw.line(window, grey, (i * cell_size, 0), (i * cell_size, height), 2)
         pygame.draw.line(window, grey, (0, i * cell_size), (width, i * cell_size), 2)
 
-    # Draw live cells without borders
+    # Draw live cells with borders
     for i in range(N):
         for j in range(N):
             if matrix[i, j] == 1:
-                rect = pygame.Rect(j * cell_size, i * cell_size, cell_size, cell_size)
+                rect = pygame.Rect(j * cell_size + 2, i * cell_size + 2, cell_size - 4, cell_size - 4)
                 pygame.draw.rect(window, black, rect)
 
     # Update the display
     pygame.display.flip()
 
     # Control the frame rate
-    pygame.time.Clock().tick(5)  # Adjust the speed as needed
+    pygame.time.Clock().tick(tick)  # Adjust the speed as needed

@@ -168,3 +168,4 @@ for i in range(50):
     # print(matrix2, "\n")
 print("bez ifow")
 print(time.time() - start_time)
+

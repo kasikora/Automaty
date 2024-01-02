@@ -71,3 +71,4 @@ for i in range(50):
     matrix = next_matrix(matrix, N, dead_or_alive, arr)
     print(i)
     print(matrix, "\n")
+
