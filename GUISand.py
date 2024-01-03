@@ -7,8 +7,8 @@ from sand_test import *
 pygame.init()
 
 # Set up the window
-cell_size = 30
-N = 30
+cell_size = 10
+N = 100
 width, height = N * cell_size, N * cell_size
 window = pygame.display.set_mode((width, height))
 pygame.display.set_caption("Game Of Life")
@@ -41,7 +41,7 @@ print("\n", matrix)
 # all_sand.reverse()
 print(all_sand)
 
-all_sand = new_alive_list(matrix)
+all_sand = new_alive_list(matrix, N)
 
 # Variable to track mouse state
 drawing = False
@@ -66,7 +66,7 @@ while True:
                 matrix[row, col].val = - matrix[row, col].val + 1
                 all_sand.append(matrix[row, col])
                 print(matrix[row, col])
-                all_sand = new_alive_list(matrix)#cos
+                all_sand = new_alive_list(matrix, N)#cos
 
         elif event.type == pygame.MOUSEMOTION and drawing:
             x, y = event.pos
@@ -74,7 +74,7 @@ while True:
             row = y // cell_size % N
             matrix[row, col].val = - matrix[row, col].val + 1
             all_sand.append(matrix[row, col])
-            all_sand = new_alive_list(matrix)#cos
+            all_sand = new_alive_list(matrix, N)#cos
 
         elif event.type == pygame.MOUSEBUTTONUP:
             if event.button == 1:

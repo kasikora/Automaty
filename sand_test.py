@@ -60,7 +60,7 @@ print("\n", matrix)
 print(all_sand)
 
 
-def new_alive_list(matrix):
+def new_alive_list(matrix, N):
     all_sand = []
     for i in range(N):
         for j in range(N):
