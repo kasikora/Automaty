@@ -21,7 +21,6 @@ class Grain:
 
     def fall(self):
         try:
-
             if self.center.val:
                 if -self.left.val + 1 or -self.right.val + 1:
                     self.val = 0
