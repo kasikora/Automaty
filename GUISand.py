@@ -93,17 +93,16 @@ while True:
 
     window.fill(black)
 
-    # Draw grid lines
-    for i in range(N + 1):
-        pygame.draw.line(window, grey, (i * cell_size, 0), (i * cell_size, height), 2)
-        pygame.draw.line(window, grey, (0, i * cell_size), (width, i * cell_size), 2)
-
     # Draw live cells with borders
     for i in range(N):
         for j in range(N):
             if matrix[i, j].val == 1:
-                rect = pygame.Rect(j * cell_size + 2, i * cell_size + 2, cell_size - 4, cell_size - 4)
+                rect = pygame.Rect(j * cell_size, i * cell_size, cell_size, cell_size)
                 pygame.draw.rect(window, yellow, rect)
+
+    for i in range(N + 1):
+        pygame.draw.line(window, grey, (i * cell_size, 0), (i * cell_size, height), 2)
+        pygame.draw.line(window, grey, (0, i * cell_size), (width, i * cell_size), 2)
 
     # Update the display
     pygame.display.flip()
