@@ -2,15 +2,14 @@ import pygame
 import sys
 import numpy
 from game_of_life_alg import omnipresent_perception, next_matrix, ar_insert
+from photo_refactor import black_and_white
 
 # Initialize Pygame
 pygame.init()
 
 # Set up the window
-cell_size = 10
-N = 100
-# slow = 30
-# fast = 60
+cell_size = 4
+N = 250
 width, height = N * cell_size, N * cell_size
 window = pygame.display.set_mode((width, height))
 pygame.display.set_caption("Game Of Life")
@@ -20,18 +19,17 @@ black = (0, 0, 0)
 white = (200, 200, 200)
 grey = (169, 169, 169)
 
+initial_board = black_and_white("avatar.jpg", "avatar22.jpg", 10)
 # Initialize matrix and game of life parameters
-def newmatrix(vector):
-    matrix = numpy.zeros((N, N)).astype(numpy.int16)
-    testarr = numpy.array(vector)
-    ar_insert(matrix, testarr, 10, 10)
-    data = omnipresent_perception()
-    dead_or_alive = data[0]
-    arr = data[1]
-    return matrix, dead_or_alive, arr
 
-matrix, dead_or_alive, arr = newmatrix([[0, 1, 0, 0], [0, 0, 1, 0], [1, 1, 1, 0], [0, 0, 0, 1], [0, 0, 0, 0]])
-# Variable to track mouse state
+# matrix = numpy.zeros((N, N)).astype(numpy.int16)
+matrix = initial_board
+testarr = numpy.array([[0, 1, 0, 0], [0, 0, 1, 0], [1, 1, 1, 0], [0, 0, 0, 1], [0, 0, 0, 0]])
+ar_insert(matrix, testarr, 10, 10)
+data = omnipresent_perception()
+dead_or_alive = data[0]
+arr = data[1]
+
 drawing = False
 
 continuos_sim = 0
@@ -65,7 +63,7 @@ while True:
             matrix = next_matrix(matrix, N, dead_or_alive, arr)
 
         if event.type == pygame.KEYDOWN and event.key == pygame.K_r:
-            matrix, dead_or_alive, arr = newmatrix([[0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0]])
+            matrix[:,:] = 0
 
         if event.type == pygame.KEYDOWN and event.key == pygame.K_MINUS:
             if tick > 6:
@@ -94,8 +92,8 @@ while True:
                 pygame.draw.rect(window, black, rect)
 
     for i in range(N + 1):
-        pygame.draw.line(window, grey, (i * cell_size, 0), (i * cell_size, height), 3)
-        pygame.draw.line(window, grey, (0, i * cell_size), (width, i * cell_size), 3)
+        pygame.draw.line(window, grey, (i * cell_size, 0), (i * cell_size, height), 1)
+        pygame.draw.line(window, grey, (0, i * cell_size), (width, i * cell_size), 1)
 
     # Update the display
     pygame.display.flip()

@@ -2,6 +2,7 @@ import pygame
 import sys
 import numpy
 from sand_test import *
+from PIL import Image
 
 # Initialize Pygame
 pygame.init()
@@ -42,6 +43,9 @@ print("\n", matrix)
 print(all_sand)
 
 all_sand = new_alive_list(matrix, N)
+
+processed_image_path = "avatar22.jpg"
+binary_image = Image.open(processed_image_path)
 
 # Variable to track mouse state
 drawing = False
@@ -93,7 +97,7 @@ while True:
 
     window.fill(black)
 
-    # Draw live cells with borders
+
     for i in range(N):
         for j in range(N):
             if matrix[i, j].val == 1:
@@ -104,8 +108,5 @@ while True:
         pygame.draw.line(window, grey, (i * cell_size, 0), (i * cell_size, height), 1)
         pygame.draw.line(window, grey, (0, i * cell_size), (width, i * cell_size), 1)
 
-    # Update the display
     pygame.display.flip()
-
-    # Control the frame rate
-    pygame.time.Clock().tick(tick)  # Adjust the speed as needed
+    pygame.time.Clock().tick(tick)
