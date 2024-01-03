@@ -101,8 +101,8 @@ while True:
                 pygame.draw.rect(window, yellow, rect)
 
     for i in range(N + 1):
-        pygame.draw.line(window, grey, (i * cell_size, 0), (i * cell_size, height), 2)
-        pygame.draw.line(window, grey, (0, i * cell_size), (width, i * cell_size), 2)
+        pygame.draw.line(window, grey, (i * cell_size, 0), (i * cell_size, height), 1)
+        pygame.draw.line(window, grey, (0, i * cell_size), (width, i * cell_size), 1)
 
     # Update the display
     pygame.display.flip()
