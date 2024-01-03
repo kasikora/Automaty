@@ -19,7 +19,7 @@ black = (0, 0, 0)
 white = (200, 200, 200)
 grey = (169, 169, 169)
 
-initial_board = black_and_white("avatar.jpg", "avatar22.jpg", 10)
+initial_board = black_and_white("23.jpg", "avatar22.jpg", N)
 # Initialize matrix and game of life parameters
 
 # matrix = numpy.zeros((N, N)).astype(numpy.int16)
