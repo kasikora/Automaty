@@ -11,7 +11,7 @@ cell_size = 10
 N = 100
 width, height = N * cell_size, N * cell_size
 window = pygame.display.set_mode((width, height))
-pygame.display.set_caption("Game Of Life")
+pygame.display.set_caption("Sand Simulator")
 
 # Set up colors
 black = (0, 0, 0)
@@ -47,7 +47,7 @@ all_sand = new_alive_list(matrix, N)
 drawing = False
 
 continuos_sim = 0
-tick = 30
+tick = 40
 press = 0
 
 # Run the game loop

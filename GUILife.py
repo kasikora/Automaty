@@ -7,8 +7,8 @@ from game_of_life_alg import omnipresent_perception, next_matrix, ar_insert
 pygame.init()
 
 # Set up the window
-cell_size = 30
-N = 30
+cell_size = 10
+N = 100
 # slow = 30
 # fast = 60
 width, height = N * cell_size, N * cell_size
@@ -35,7 +35,7 @@ matrix, dead_or_alive, arr = newmatrix([[0, 1, 0, 0], [0, 0, 1, 0], [1, 1, 1, 0]
 drawing = False
 
 continuos_sim = 0
-tick = 32
+tick = 40
 
 
 # Run the game loop
@@ -94,8 +94,8 @@ while True:
                 pygame.draw.rect(window, black, rect)
 
     for i in range(N + 1):
-        pygame.draw.line(window, grey, (i * cell_size, 0), (i * cell_size, height), 2)
-        pygame.draw.line(window, grey, (0, i * cell_size), (width, i * cell_size), 2)
+        pygame.draw.line(window, grey, (i * cell_size, 0), (i * cell_size, height), 3)
+        pygame.draw.line(window, grey, (0, i * cell_size), (width, i * cell_size), 3)
 
     # Update the display
     pygame.display.flip()
