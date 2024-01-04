@@ -4,29 +4,23 @@ import numpy
 from game_of_life_alg import omnipresent_perception, next_matrix, ar_insert
 from photo_refactor import black_and_white
 
-# Initialize Pygame
+
 pygame.init()
 
-# Set up the window
 cell_size = 10
 N = 100
-# slow = 30
-# fast = 60
 width, height = N * cell_size, N * cell_size
 window = pygame.display.set_mode((width, height))
 pygame.display.set_caption("Game Of Life")
 
-# Set up colors
 black = (0, 0, 0)
 white = (200, 200, 200)
 grey = (169, 169, 169)
 
-initial_board = black_and_white("1.jpg", "11.jpg", N)
-# Initialize matrix and game of life parameters
+initial_board = black_and_white("2.jpg", "11.jpg", N)
 
-# matrix = numpy.zeros((N, N)).astype(numpy.int16)
 matrix = initial_board
-testarr = numpy.array([[0, 1, 0, 0], [0, 0, 1, 0], [1, 1, 1, 0], [0, 0, 0, 1], [0, 0, 0, 0]])
+testarr = numpy.array([[0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0]])
 ar_insert(matrix, testarr, 10, 10)
 data = omnipresent_perception()
 dead_or_alive = data[0]
@@ -97,8 +91,6 @@ while True:
         pygame.draw.line(window, grey, (i * cell_size, 0), (i * cell_size, height), 1)
         pygame.draw.line(window, grey, (0, i * cell_size), (width, i * cell_size), 1)
 
-    # Update the display
     pygame.display.flip()
 
-    # Control the frame rate
-    pygame.time.Clock().tick(tick)  # Adjust the speed as needed
+    pygame.time.Clock().tick(tick)

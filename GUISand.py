@@ -3,6 +3,7 @@ import sys
 import numpy
 from sand_test import *
 from PIL import Image
+from photo_refactor import black_and_white
 
 # Initialize Pygame
 pygame.init()
@@ -14,7 +15,9 @@ width, height = N * cell_size, N * cell_size
 window = pygame.display.set_mode((width, height))
 pygame.display.set_caption("Sand Simulator")
 
-# Set up colors
+
+initial_board = black_and_white("1.jpg", "11.jpg", N)
+
 black = (0, 0, 0)
 white = (200, 200, 200)
 grey = (50, 50, 50)
@@ -26,6 +29,10 @@ for i in range(N):
     for j in range(N):
         matrix[i, j] = Grain()
 
+for i in range(N):
+    for j in range(N):
+        matrix[i, j].val = 1 if initial_board[i, j] == 1 else 0
+
 for i in range(N - 1):
     for j in range(N - 2):
         matrix[i, j + 1].left = matrix[i + 1, j - 1 + 1]
@@ -33,11 +40,13 @@ for i in range(N - 1):
         matrix[i, j + 1].right = matrix[i + 1, j + 1 + 1]
 
 print(matrix)
+
 all_sand = []
-for i in range(10):
-    for j in range(10):
-        matrix[i, j + 10].val = 1
-        all_sand.append(matrix[i, j + 10])
+for i in range(N):
+    for j in range(N):
+        if matrix[i, j].val == 1:
+            all_sand.append(matrix[i, j])
+
 print("\n", matrix)
 # all_sand.reverse()
 print(all_sand)
@@ -84,13 +93,18 @@ while True:
             if event.button == 1:
                 drawing = False
 
-        # Handle SPACE key to run the simulation
 
         if event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE:
             all_sand = let_them_fall2(all_sand)
 
         if event.type == pygame.KEYDOWN and event.key == pygame.K_F10:
             continuos_sim = - continuos_sim + 1
+
+        if event.type == pygame.KEYDOWN and event.key == pygame.K_r:
+            for i in range(N):
+                for j in range(N):
+                    matrix[i, j].val = 0
+            all_sand = new_alive_list(matrix, N)  # cos
 
     if continuos_sim == 1:
         all_sand = let_them_fall2(all_sand)
