@@ -17,7 +17,7 @@ black = (0, 0, 0)
 white = (200, 200, 200)
 grey = (169, 169, 169)
 
-initial_board = black_and_white("2.jpg", "11.jpg", N)
+initial_board = black_and_white("3.jpg", "11.jpg", N)
 
 matrix = initial_board
 testarr = numpy.array([[0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0]])

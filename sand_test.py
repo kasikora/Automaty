@@ -13,6 +13,9 @@ class Grain:
         self.right = None
         self.val = 0
 
+        self.up_left = None
+        self.up_right = None
+
     def __str__(self):
         return f"{self.val}"
 
@@ -24,7 +27,9 @@ class Grain:
             if self.center.val:
                 if -self.left.val + 1 or -self.right.val + 1:
                     self.val = 0
-                    chosen_one = random.choices([self.left, self.right], weights=[-self.left.val + 1, -self.right.val + 1], k=1)[0]
+                    chosen_one = \
+                        random.choices([self.left, self.right], weights=[-self.left.val + 1, -self.right.val + 1], k=1)[
+                            0]
                     chosen_one.val = 1
                     return chosen_one
                 else:
@@ -33,6 +38,36 @@ class Grain:
                 self.val = 0
                 self.center.val = 1
                 return self.center
+        except:
+            return self
+
+    def fall2(self):
+        try:
+            if not self.center.val and not self.left.val and not self.right.val:
+                chosen_one = random.choices([self.left, self.right, self.center],
+                                            weights=[-self.left.val + 1, -self.right.val + 1, -self.center.val + 1],
+                                            k=1)[0]
+                # chosen_one = random.choice([self.left, self.right, self.center])
+                self.val = 0
+                chosen_one.val = 1
+                return chosen_one
+            else:
+                return self
+        except:
+            return self
+
+    def fall3(self):
+        try:
+            if not self.center.val or not self.left.val or not self.right.val:
+                chosen_one = random.choices([self.left, self.right, self.center],
+                                            weights=[-self.left.val + 1, -self.right.val + 1, -self.center.val + 1],
+                                            k=1)[0]
+                # chosen_one = random.choice([self.left, self.right, self.center])
+                self.val = 0
+                chosen_one.val = 1
+                return chosen_one
+            else:
+                return self
         except:
             return self
 
@@ -67,6 +102,7 @@ def new_alive_list(matrix, N):
                 all_sand.append(matrix[i, j])
     return all_sand
 
+
 def let_them_fall(all_sand):
     new_sand = []
     for i in all_sand:
@@ -97,6 +133,14 @@ def let_them_fall2(all_sand):
     return new_sand
 
 
+def let_them_fall3(all_sand):
+    new_sand = []
+    random.shuffle(all_sand)
+    for i in all_sand:
+        new_sand.append(i.fall2())
+    return new_sand
+
+
 # matrix[0, 3].val = 1
 # matrix[0, 3].left.val = 1
 # matrix[0, 3].center.val = 1
@@ -104,7 +148,7 @@ def let_them_fall2(all_sand):
 # print(matrix)
 
 for i in range(50):
-    all_sand = let_them_fall2(all_sand)
+    all_sand = let_them_fall3(all_sand)
     print("\n", i, "\n", matrix)
     # print(len(all_sand))
 
