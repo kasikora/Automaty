@@ -41,7 +41,7 @@ class Grain:
         except:
             return self
 
-    def fall2(self):
+    def kordyceps(self):
         try:
             if not self.center.val and not self.left.val and not self.right.val:
                 chosen_one = random.choices([self.left, self.right, self.center],
@@ -137,7 +137,7 @@ def let_them_fall3(all_sand):
     new_sand = []
     random.shuffle(all_sand)
     for i in all_sand:
-        new_sand.append(i.fall2())
+        new_sand.append(i.fall())
     return new_sand
 
 
@@ -148,7 +148,7 @@ def let_them_fall3(all_sand):
 # print(matrix)
 
 for i in range(50):
-    all_sand = let_them_fall3(all_sand)
+    all_sand = let_them_fall(all_sand)
     print("\n", i, "\n", matrix)
     # print(len(all_sand))
 
