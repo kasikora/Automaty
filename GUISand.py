@@ -10,7 +10,7 @@ pygame.init()
 
 # Set up the window
 cell_size = 10
-N = 100
+N = 80
 width, height = N * cell_size, N * cell_size
 window = pygame.display.set_mode((width, height))
 pygame.display.set_caption("Sand Simulator")
