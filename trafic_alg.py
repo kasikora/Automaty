@@ -32,7 +32,7 @@ class Road:
             self.next_neighbour = self.just_follow_the_orders.pop(0)
         else:
             self.next_neighbour = random.choice(self.neighbours)
-            print(self.next_neighbour, "qweqwe")
+            # print(self.next_neighbour, "qweqwe")
 
     def __str__(self):
         return f"{self.has_car}"
@@ -41,21 +41,21 @@ class Road:
         return f"{self.has_car}"
 
     def drive(self):
-        # print(self.has_car)
         try:
             if self.has_car:
                 if self.next_neighbour.has_car:
-                    print("XD")
+                    # print("XD")
                     return self
                 else:
-                    print(":D")
+                    # print(":D")
+                    self.next_neighbour.set_next_neighbour()
                     self.next_neighbour.has_car = 1
                     self.has_car = 0
-                    self.next_neighbour.set_next_neighbour()
                     self.next_neighbour.just_follow_the_orders = self.just_follow_the_orders
                     return self.next_neighbour
         except:
             self.has_car = 0
+            print("numa numa jej")
 
 
 # class CrossRoads:
@@ -69,40 +69,65 @@ class OmniPresentCrossroad:  # robienie tras w skrzyzowaniiach musza juz istniec
         self.all_exit = []
         self.paths = []
 
-    def add_entrance(self, entrence):
-        self.all_entrance.append(entrence)
+    def add_entrance(self, crossroad_entrance):
+        self.all_entrance.append(crossroad_entrance)
 
-    def add_exit(self, exit):
-        self.all_exit.append(exit)
+    def add_exit(self, crossroad_exit):
+        self.all_exit.append(crossroad_exit)
 
     def function(self, current_path):  # todo nazwac to jakos i przetestowac
         new_path = []
         for next_node in current_path[-1].neighbours:
             if next_node in current_path:
                 return None
-            new_path = current_path.copy
+            new_path = current_path.copy()
+            print("tutaj: ", new_path)
             new_path.append(next_node)
             if next_node in self.all_exit:
                 self.paths.append(new_path)
                 return None
+            if len(new_path) > 100:
+                print("Path to long  ?mising exit?")
+                return None
             self.function(new_path)
 
+    def check_node(self, node_to_check):
+        pass
+
+    def function2(self, current_path):
+        this_node = current_path[-1]
+        if len(current_path) > 1:
+            if this_node in current_path[:-1]:
+                return None
+        if this_node in self.all_exit:
+            self.paths.append(current_path)
+            return None
+        if len(current_path) > 100:
+            print("Path to long  ?mising exit?")
+            return None
+        for node in this_node.neighbours:
+            new_path = current_path.copy()
+            new_path.append(node)
+            self.function2(new_path)
+
     def create_paths(self):
+        print(self.all_entrance)
+        print(self.all_exit)
         for entrance in self.all_entrance:
-            self.function(entrance)
+            tmp_path = []
+            tmp_path.append(entrance)
+            self.function2(tmp_path)
+        print(self.paths, "\n", len(self.paths))
 
     def give_orders(self):
         for entrance in self.all_entrance:
-            if entrance.has_car:
+            if entrance.has_car and not entrance.just_follow_the_orders:
                 path = random.choice(self.paths)
-                path.pop(0)
-                entrance.just_follow_the_orders = path
+                # path.pop(0)
+                entrance.just_follow_the_orders = path[1:].copy()
 
     # def wath_entrance(self):
     #     for entrance in self.all_entrance:
-
-
-N = 20
 
 
 # matrix = numpy.empty((N, N), dtype=Road)
@@ -128,41 +153,108 @@ N = 20
 #     for j in range(N):
 #         matrix[i, j].update_neighbour_list()
 
-class spawner:
-    def __init__(self, spawnpoint, frequency):
-        self.spawnpoint = spawnpoint
-        self.frequency = frequency
+class Spawner:
+    def __init__(self, spawnpoint_road_object, frequency_spawn_percentage_chance=10):
+        self.spawnpoint = spawnpoint_road_object
+        self.frequency = frequency_spawn_percentage_chance
+        print(self.frequency)
+
+    def spawn(self, car_list):
+        if random.choices([0, 1], weights=[100 - self.frequency, self.frequency], k=1)[0]:
+            print("Spawning new fgdfhd")
+            self.spawnpoint.has_car = 1
+            car_list.append(self.spawnpoint)
+            self.spawnpoint.set_next_neighbour()
 
 
-matrix = numpy.empty((N, N), dtype=Road)
+class SpawnersListObject:
+    def __init__(self):
+        self.list_of_spawners = []
+
+    def add_spawner(self, spawner_to_add):
+        self.list_of_spawners.append(spawner_to_add)
+
+    def spawn_all(self, car_list):
+        for spawner in self.list_of_spawners:
+            spawner.spawn(car_list)
+
+
+def make_road_matrix(N):
+    matrix = numpy.empty((N, N), dtype=Road)
+    for i in range(N):
+        for j in range(N):
+            matrix[i, j] = Road()
+    print(matrix)
+    return matrix
+
+
+def cars_go(cars):
+    new_cars = []
+    while len(cars):
+        ten = random.randint(0, len(cars) - 1)
+
+        new_cars.append(cars[ten].drive())
+        if new_cars[-1] is None:
+            new_cars.pop(-1)
+        cars.pop(ten)
+    return new_cars
+    # new_cars = []
+    # random.shuffle(new_cars)
+    # for car in cars:
+    #     new_cars.append(car.drive())
+    # return new_cars
+
+
+N = 20
+
+matrix = make_road_matrix(N)
+spawners = SpawnersListObject()
 
 for i in range(N - 1):
     matrix[i, 10].neighbours.append(matrix[i + 1, 10])
 for i in range(N - 1):
-    matrix[i + 1, 10].neighbours.append(matrix[i, 10])
+    matrix[i + 1, 11].neighbours.append(matrix[i, 11])
+spawners.add_spawner(Spawner(matrix[0, 10]))
+spawners.add_spawner(Spawner(matrix[N - 1, 11]))
 
 for i in range(N - 1):
-    matrix[10, i].neighbours.append(matrix[10, i + 1])
+    matrix[11, i].neighbours.append(matrix[11, i + 1])
 for i in range(N - 1):
     matrix[10, i + 1].neighbours.append(matrix[10, i])
-#
-# crossA = OmniPresentCrossroad
-#
+spawners.add_spawner(Spawner(matrix[11, 0]))
+spawners.add_spawner(Spawner(matrix[10, N - 1]))
+
+cars = []
+for i in spawners.list_of_spawners:
+    print(i)
+
+crossroad1 = OmniPresentCrossroad()
+
+crossroad1.add_entrance(matrix[9, 10])
+crossroad1.add_entrance(matrix[10, 12])
+crossroad1.add_entrance(matrix[12, 11])
+crossroad1.add_entrance(matrix[11, 9])
+
+crossroad1.add_exit(matrix[9, 11])
+crossroad1.add_exit(matrix[11, 12])
+crossroad1.add_exit(matrix[12, 10])
+crossroad1.add_exit(matrix[10, 9])
+
+crossroad1.create_paths()
+
+for i in range(30):
+    spawners.spawn_all(cars)
+    crossroad1.give_orders()
+    print(cars)
+    cars = cars_go(cars)
+    print("\n", matrix)
+
 # for i in cars:
 #     i.set_next_neighbour()
 #
 #
-# def cars_go(cars):
-#     new_cars = []
-#     while len(cars):
-#         ten = random.randint(0, len(cars) - 1)
-#
-#         new_cars.append(cars[ten].drive())
-#         if new_cars[-1] is None:
-#             new_cars.pop(-1)
-#         cars.pop(ten)
-#     return new_cars
-#
+
+
 #
 # for i in range(4):
 #     cars = cars_go(cars)
