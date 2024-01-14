@@ -88,7 +88,7 @@ def omnipresent_perception():
                 to_be_or_not_to_be[i] = 0
             else:
                 to_be_or_not_to_be[i] = 1
-    tmp = numpy.zeros((n*n)).astype(numpy.int16)
+    tmp = numpy.zeros((n * n)).astype(numpy.int16)
     print(tmp)
     for i in range(n * n):
         tmp[i] = (1 << n * n - i - 1)
@@ -143,11 +143,11 @@ def next_matrix2(matrix):
     return new_matrix
 
 
-tmp = omnipresent_perception()
-dead_or_alive_you_spin_me_right_round = tmp[0]
-arrr4 = tmp[1]
-print(dead_or_alive_you_spin_me_right_round.dtype)
-print(arrr4)
+# tmp = omnipresent_perception()
+# dead_or_alive_you_spin_me_right_round = tmp[0]
+# arrr4 = tmp[1]
+# print(dead_or_alive_you_spin_me_right_round.dtype)
+# print(arrr4)
 # matrix1 = matrix.copy()
 #
 # start_time = time.time()
@@ -159,13 +159,22 @@ print(arrr4)
 # print("z ifami")
 # print(time.time()-start_time)
 
-matrix2 = matrix.copy()
-start_time = time.time()
+# matrix2 = matrix.copy()
+# start_time = time.time()
 
-for i in range(50):
-    matrix2 = next_matrix(matrix2, dead_or_alive_you_spin_me_right_round, arrr4)
-    # print(i)
-    # print(matrix2, "\n")
-print("bez ifow")
-print(time.time() - start_time)
+# for i in range(50):
+#     matrix2 = next_matrix(matrix2, dead_or_alive_you_spin_me_right_round, arrr4)
+#     # print(i)
+#     # print(matrix2, "\n")
+# print("bez ifow")
+# print(time.time() - start_time)
+print("------------")
 
+#  i   j
+b=[-1,  0]
+a=[0, 1]
+# todo matma na to czy przyjechal z prawej czy z lewej
+c=[0,0]
+c[0]=a[0]*b[0]+a[1]*b[1]
+c[1]=a[0]*b[1]-a[1]*b[0]
+print(c)

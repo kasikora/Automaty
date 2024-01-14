@@ -7,6 +7,7 @@ from photo_refactor import black_and_white
 
 pygame.init()
 
+
 cell_size = 10
 N = 100
 width, height = N * cell_size, N * cell_size
@@ -18,10 +19,7 @@ white = (200, 200, 200)
 grey = (169, 169, 169)
 
 initial_board = black_and_white("3.jpg", "11.jpg", N)
-
 matrix = initial_board
-testarr = numpy.array([[0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0]])
-ar_insert(matrix, testarr, 10, 10)
 data = omnipresent_perception()
 dead_or_alive = data[0]
 arr = data[1]

@@ -15,7 +15,7 @@ width, height = N * cell_size, N * cell_size
 window = pygame.display.set_mode((width, height))
 pygame.display.set_caption("Sand Simulator")
 
-initial_board = black_and_white("XD.JPG", "11.jpg", N)
+initial_board = black_and_white("3.JPG", "11.jpg", N)
 
 black = (0, 0, 0)
 white = (200, 200, 200)
@@ -32,9 +32,9 @@ for i in range(N):
     for j in range(N):
         matrix[i, j].val = 1 if initial_board[i, j] == 1 else 0
         #matrix[i, j].val = -matrix[i, j].val+1
-for i in range(N // 20):
-    for j in range(N):
-        matrix[i, j].val = 1
+# for i in range(N // 20):
+#     for j in range(N):
+#         matrix[i, j].val = 1
 
 for i in range(N - 1):
     for j in range(N - 2):
