@@ -27,39 +27,48 @@ class Road:
         if self.right is not None:
             self.neighbours.append(self.right)
 
-    def set_next_neighbour(self):
-        if self.just_follow_the_orders:
-            self.next_neighbour = self.just_follow_the_orders.pop(0)
-        else:
-            self.next_neighbour = random.choice(self.neighbours)
-            # print(self.next_neighbour, "qweqwe")
-
     def __str__(self):
         return f"{self.has_car}"
 
     def __repr__(self):
         return f"{self.has_car}"
-
+    def set_next_neighbour(self, neighbour=None): # todo rozdnielic moze na 2
+        if neighbour is None:
+            if self.neighbours:
+                self.next_neighbour = random.choice(self.neighbours)
+                # print(self.next_neighbour, "qweqwe")
+            else:
+                print("No neighbours")
+        else:
+            self.next_neighbour = neighbour
+    def set_next_car_path(self):
+        if self.just_follow_the_orders:
+            self.next_neighbour.set_next_neighbour(self.just_follow_the_orders.pop(0))
+            self.next_neighbour.just_follow_the_orders = self.just_follow_the_orders.copy()
+            self.just_follow_the_orders = []
+        else:
+            self.next_neighbour.set_next_neighbour()
     def drive(self):
-        try:
-            if self.has_car:
-                if self.next_neighbour is not None:
-                    if self.next_neighbour.has_car:
-                        # print("XD")
-                        return self
-                    else:
-                        # print(":D")
-                        self.next_neighbour.set_next_neighbour()
-                        self.next_neighbour.has_car = 1
-                        self.has_car = 0
-                        self.next_neighbour.just_follow_the_orders = self.just_follow_the_orders
-                        return self.next_neighbour
+        #try:
+        if self.has_car:
+            if self.next_neighbour is not None:
+                if self.next_neighbour.has_car:
+                    # print("XD")
+                    return self
                 else:
-                    print("Nowhere to go")
+                    # print(":D")
+                    # self.next_neighbour.set_next_neighbour()
+                    self.next_neighbour.has_car = 1
                     self.has_car = 0
-        except:
-            self.has_car = 0
-            print("get bugged")
+                    self.set_next_car_path()
+                    print(self.just_follow_the_orders)
+                    return self.next_neighbour
+            else:
+                print("Nowhere to go")
+                self.has_car = 0
+        # except:
+        #     self.has_car = 0
+        #     print("get bugged")
 
 
 # class CrossRoads:
@@ -126,9 +135,14 @@ class OmniPresentCrossroad:  # robienie tras w skrzyzowaniiach musza juz istniec
     def give_orders(self):
         for entrance in self.all_entrance:
             if entrance.has_car and not entrance.just_follow_the_orders:
-                path = random.choice(self.paths)
                 # path.pop(0)
+                paths_for_that_entrance = []
+                for path in self.paths:
+                    if path[0] is entrance:
+                        paths_for_that_entrance.append(path)
+                path = random.choice(paths_for_that_entrance)
                 entrance.just_follow_the_orders = path[1:].copy()
+                entrance.set_next_car_path()
 
     # def wath_entrance(self):
     #     for entrance in self.all_entrance:

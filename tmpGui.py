@@ -20,7 +20,7 @@ for i in range(N - 1):
     matrix[i, 10].neighbours.append(matrix[i + 1, 10])
 for i in range(N - 1):
     matrix[i + 1, 11].neighbours.append(matrix[i, 11])
-spawners.add_spawner(Spawner(matrix[0, 10], frequency_spawn_percentage_chance=20))
+spawners.add_spawner(Spawner(matrix[0, 10], frequency_spawn_percentage_chance=5))
 # spawners.add_spawner(Spawner(matrix[N - 1, 11]))
 
 for i in range(N - 1):

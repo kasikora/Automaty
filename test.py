@@ -178,3 +178,15 @@ c=[0,0]
 c[0]=a[0]*b[0]+a[1]*b[1]
 c[1]=a[0]*b[1]-a[1]*b[0]
 print(c)
+
+eee=[1,2]
+while True:
+    print(eee)
+    if eee:
+        eee.pop(0)
+    else:
+        break
+
+a = [1]
+b = a.copy()
+print(a,b)
