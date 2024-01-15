@@ -43,19 +43,23 @@ class Road:
     def drive(self):
         try:
             if self.has_car:
-                if self.next_neighbour.has_car:
-                    # print("XD")
-                    return self
+                if self.next_neighbour is not None:
+                    if self.next_neighbour.has_car:
+                        # print("XD")
+                        return self
+                    else:
+                        # print(":D")
+                        self.next_neighbour.set_next_neighbour()
+                        self.next_neighbour.has_car = 1
+                        self.has_car = 0
+                        self.next_neighbour.just_follow_the_orders = self.just_follow_the_orders
+                        return self.next_neighbour
                 else:
-                    # print(":D")
-                    self.next_neighbour.set_next_neighbour()
-                    self.next_neighbour.has_car = 1
+                    print("Nowhere to go")
                     self.has_car = 0
-                    self.next_neighbour.just_follow_the_orders = self.just_follow_the_orders
-                    return self.next_neighbour
         except:
             self.has_car = 0
-            print("numa numa jej")
+            print("get bugged")
 
 
 # class CrossRoads:
@@ -154,7 +158,7 @@ class OmniPresentCrossroad:  # robienie tras w skrzyzowaniiach musza juz istniec
 #         matrix[i, j].update_neighbour_list()
 
 class Spawner:
-    def __init__(self, spawnpoint_road_object, frequency_spawn_percentage_chance=10):
+    def __init__(self, spawnpoint_road_object, frequency_spawn_percentage_chance=20):
         self.spawnpoint = spawnpoint_road_object
         self.frequency = frequency_spawn_percentage_chance
         print(self.frequency)
@@ -214,15 +218,15 @@ for i in range(N - 1):
     matrix[i, 10].neighbours.append(matrix[i + 1, 10])
 for i in range(N - 1):
     matrix[i + 1, 11].neighbours.append(matrix[i, 11])
-spawners.add_spawner(Spawner(matrix[0, 10]))
-spawners.add_spawner(Spawner(matrix[N - 1, 11]))
+spawners.add_spawner(Spawner(matrix[0, 10], frequency_spawn_percentage_chance=20))
+# spawners.add_spawner(Spawner(matrix[N - 1, 11]))
 
 for i in range(N - 1):
     matrix[11, i].neighbours.append(matrix[11, i + 1])
 for i in range(N - 1):
     matrix[10, i + 1].neighbours.append(matrix[10, i])
-spawners.add_spawner(Spawner(matrix[11, 0]))
-spawners.add_spawner(Spawner(matrix[10, N - 1]))
+# spawners.add_spawner(Spawner(matrix[11, 0]))
+# spawners.add_spawner(Spawner(matrix[10, N - 1]))
 
 cars = []
 for i in spawners.list_of_spawners:
