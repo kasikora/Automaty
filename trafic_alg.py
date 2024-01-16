@@ -141,7 +141,8 @@ class OmniPresentCrossroad:  # robienie tras w skrzyzowaniiach musza juz istniec
                     if path[0] is entrance:
                         paths_for_that_entrance.append(path)
                 path = random.choice(paths_for_that_entrance)
-                entrance.just_follow_the_orders = path[1:].copy()
+
+                entrance.just_follow_the_orders = path[2:].copy()
                 entrance.set_next_car_path()
 
     # def wath_entrance(self):

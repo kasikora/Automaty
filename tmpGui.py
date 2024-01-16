@@ -20,15 +20,15 @@ for i in range(N - 1):
     matrix[i, 10].neighbours.append(matrix[i + 1, 10])
 for i in range(N - 1):
     matrix[i + 1, 11].neighbours.append(matrix[i, 11])
-spawners.add_spawner(Spawner(matrix[0, 10], frequency_spawn_percentage_chance=5))
-# spawners.add_spawner(Spawner(matrix[N - 1, 11]))
+spawners.add_spawner(Spawner(matrix[0, 10], frequency_spawn_percentage_chance=3))
+spawners.add_spawner(Spawner(matrix[N - 1, 11], frequency_spawn_percentage_chance=3))
 
 for i in range(N - 1):
     matrix[11, i].neighbours.append(matrix[11, i + 1])
 for i in range(N - 1):
     matrix[10, i + 1].neighbours.append(matrix[10, i])
-# spawners.add_spawner(Spawner(matrix[11, 0]))
-# spawners.add_spawner(Spawner(matrix[10, N - 1]))
+spawners.add_spawner(Spawner(matrix[11, 0],3))
+spawners.add_spawner(Spawner(matrix[10, N - 1], 3))
 
 cars = []
 for i in spawners.list_of_spawners:
@@ -36,15 +36,26 @@ for i in spawners.list_of_spawners:
 
 crossroad1 = OmniPresentCrossroad()
 
-crossroad1.add_entrance(matrix[9, 10])
-crossroad1.add_entrance(matrix[10, 12])
-crossroad1.add_entrance(matrix[12, 11])
-crossroad1.add_entrance(matrix[11, 9])
+# crossroad1.add_entrance(matrix[9, 10])
+# crossroad1.add_entrance(matrix[10, 12])
+# crossroad1.add_entrance(matrix[12, 11])
+# crossroad1.add_entrance(matrix[11, 9])
+#
+# crossroad1.add_exit(matrix[9, 11])
+# crossroad1.add_exit(matrix[11, 12])
+# crossroad1.add_exit(matrix[12, 10])
+# crossroad1.add_exit(matrix[10, 9])
 
-crossroad1.add_exit(matrix[9, 11])
-crossroad1.add_exit(matrix[11, 12])
-crossroad1.add_exit(matrix[12, 10])
-crossroad1.add_exit(matrix[10, 9])
+
+crossroad1.add_entrance(matrix[8, 10])
+crossroad1.add_entrance(matrix[10, 13])
+crossroad1.add_entrance(matrix[13, 11])
+crossroad1.add_entrance(matrix[11, 8])
+
+crossroad1.add_exit(matrix[8, 11])
+crossroad1.add_exit(matrix[11, 13])
+crossroad1.add_exit(matrix[13, 10])
+crossroad1.add_exit(matrix[10, 8])
 
 crossroad1.create_paths()
 
@@ -71,7 +82,7 @@ yellow = (204, 204, 0)
 drawing = False
 
 continuos_sim = 0
-tick = 40
+tick = 30
 press = 0
 
 # Run the game loop
