@@ -8,13 +8,14 @@ numpy.set_printoptions(linewidth=256)
 class Road:
     def __init__(self):
         self.has_car = 0
-        self.had_car = 0
         self.ahead = None
         self.left = None
         self.right = None
         self.neighbours = []
         self.next_neighbour = None
         self.just_follow_the_orders = []
+        self.from_entrance = None
+        self.stop = False
 
     def clear_neighbour_list(self):
         self.neighbours = []
@@ -32,7 +33,8 @@ class Road:
 
     def __repr__(self):
         return f"{self.has_car}"
-    def set_next_neighbour(self, neighbour=None): # todo rozdnielic moze na 2
+
+    def set_next_neighbour(self, neighbour=None):  # todo rozdnielic moze na 2
         if neighbour is None:
             if self.neighbours:
                 self.next_neighbour = random.choice(self.neighbours)
@@ -41,6 +43,7 @@ class Road:
                 print("No neighbours")
         else:
             self.next_neighbour = neighbour
+
     def set_next_car_path(self):
         if self.just_follow_the_orders:
             self.next_neighbour.set_next_neighbour(self.just_follow_the_orders.pop(0))
@@ -48,8 +51,9 @@ class Road:
             self.just_follow_the_orders = []
         else:
             self.next_neighbour.set_next_neighbour()
+
     def drive(self):
-        #try:
+        # try:
         if self.has_car:
             if self.next_neighbour is not None:
                 if self.next_neighbour.has_car:
@@ -60,12 +64,44 @@ class Road:
                     # self.next_neighbour.set_next_neighbour()
                     self.next_neighbour.has_car = 1
                     self.has_car = 0
-                    self.set_next_car_path()
                     print(self.just_follow_the_orders)
+                    self.set_next_car_path()
                     return self.next_neighbour
             else:
                 print("Nowhere to go")
                 self.has_car = 0
+
+    def drive2(self):
+        if self.has_car:
+            if self.stop:
+                self.stop = False
+                return self
+            else:
+                if self.just_follow_the_orders:
+                    if self.just_follow_the_orders[0].has_car:
+                        return self
+                    else:
+                        tmp_neighbour = self.just_follow_the_orders.pop(0)
+                        tmp_neighbour.has_car = 1
+                        tmp_neighbour.just_follow_the_orders = self.just_follow_the_orders.copy()
+                        self.just_follow_the_orders = []
+                        self.has_car = 0
+                        return tmp_neighbour
+                else:
+                    if self.neighbours:
+                        if self.neighbours[0].has_car:
+                            return self
+                        else:
+                            self.neighbours[0].has_car = 1
+                            self.has_car = 0
+                            return self.neighbours[0]
+                    else:
+                        self.has_car = 0
+                        print("No Neighbours")
+                        return None
+        else:
+            print("EC PIN ERRRROOORRRRR")
+
         # except:
         #     self.has_car = 0
         #     print("get bugged")
@@ -81,6 +117,7 @@ class OmniPresentCrossroad:  # robienie tras w skrzyzowaniiach musza juz istniec
         self.all_entrance = []  # obiekty klasy road
         self.all_exit = []
         self.paths = []
+        self.my_roads = []
 
     def add_entrance(self, crossroad_entrance):
         self.all_entrance.append(crossroad_entrance)
@@ -103,9 +140,6 @@ class OmniPresentCrossroad:  # robienie tras w skrzyzowaniiach musza juz istniec
                 print("Path to long  ?mising exit?")
                 return None
             self.function(new_path)
-
-    def check_node(self, node_to_check):
-        pass
 
     def function2(self, current_path):
         this_node = current_path[-1]
@@ -141,10 +175,32 @@ class OmniPresentCrossroad:  # robienie tras w skrzyzowaniiach musza juz istniec
                     if path[0] is entrance:
                         paths_for_that_entrance.append(path)
                 path = random.choice(paths_for_that_entrance)
+                entrance.just_follow_the_orders = path[1:].copy()
+                # entrance.just_follow_the_orders = path[2:].copy()
+                # entrance.set_next_car_path()
+                # entrance.from_entrance = path[0]
 
-                entrance.just_follow_the_orders = path[2:].copy()
-                entrance.set_next_car_path()
+    def create_my_roads(self):
+        for path in self.paths:
+            for node in path:
+                if node not in self.my_roads:
+                    self.my_roads.append(node)
 
+    def basic_rule(self):  # todo wymyslic skad wziac kierunek sciezki
+        cars = []
+        for node in self.my_roads:
+            if node.has_car:
+                cars.append(node)
+        for car1 in cars:
+            for car2 in cars:
+                if car1 is not car2:
+                    for i in range(min(len(car1.just_follow_the_orders), len(car2.just_follow_the_orders)) - 1):
+                        if car1.just_follow_the_orders[i] is car2.just_follow_the_orders[i]:
+                            car1.stop = True
+                        if car1.just_follow_the_orders[i] is car2.just_follow_the_orders[i + 1]:
+                            car1.stop = True
+
+    # todo samochod czeka gdzy jego sciezke przecina inny z indexem rownym lub o 1 wiekszym
     # def wath_entrance(self):
     #     for entrance in self.all_entrance:
 
@@ -183,7 +239,7 @@ class Spawner:
             print("Spawning new fgdfhd")
             self.spawnpoint.has_car = 1
             car_list.append(self.spawnpoint)
-            self.spawnpoint.set_next_neighbour()
+            # self.spawnpoint.set_next_neighbour()
 
 
 class SpawnersListObject:
@@ -211,8 +267,7 @@ def cars_go(cars):
     new_cars = []
     while len(cars):
         ten = random.randint(0, len(cars) - 1)
-
-        new_cars.append(cars[ten].drive())
+        new_cars.append(cars[ten].drive2())
         if new_cars[-1] is None:
             new_cars.pop(-1)
         cars.pop(ten)

@@ -11,7 +11,7 @@ pygame.init()
 # Set up the window
 cell_size = 20
 
-N = 20
+N = 22
 
 matrix = make_road_matrix(N)
 spawners = SpawnersListObject()
@@ -47,15 +47,15 @@ crossroad1 = OmniPresentCrossroad()
 # crossroad1.add_exit(matrix[10, 9])
 
 
-crossroad1.add_entrance(matrix[8, 10])
-crossroad1.add_entrance(matrix[10, 13])
-crossroad1.add_entrance(matrix[13, 11])
-crossroad1.add_entrance(matrix[11, 8])
+crossroad1.add_entrance(matrix[6, 10])
+crossroad1.add_entrance(matrix[10, 15])
+crossroad1.add_entrance(matrix[15, 11])
+crossroad1.add_entrance(matrix[11, 6])
 
-crossroad1.add_exit(matrix[8, 11])
-crossroad1.add_exit(matrix[11, 13])
-crossroad1.add_exit(matrix[13, 10])
-crossroad1.add_exit(matrix[10, 8])
+crossroad1.add_exit(matrix[6, 11])
+crossroad1.add_exit(matrix[11, 15])
+crossroad1.add_exit(matrix[15, 10])
+crossroad1.add_exit(matrix[10, 6])
 
 crossroad1.create_paths()
 
@@ -82,7 +82,7 @@ yellow = (204, 204, 0)
 drawing = False
 
 continuos_sim = 0
-tick = 30
+tick = 10
 press = 0
 
 # Run the game loop

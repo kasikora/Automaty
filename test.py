@@ -171,22 +171,11 @@ def next_matrix2(matrix):
 print("------------")
 
 #  i   j
-b=[-1,  0]
-a=[0, 1]
+a=[-1,  0]
+b=[0, 1]
 # todo matma na to czy przyjechal z prawej czy z lewej
 c=[0,0]
 c[0]=a[0]*b[0]+a[1]*b[1]
-c[1]=a[0]*b[1]-a[1]*b[0]
+c[1]=a[1]*b[0]-a[0]*b[1]
 print(c)
 
-eee=[1,2]
-while True:
-    print(eee)
-    if eee:
-        eee.pop(0)
-    else:
-        break
-
-a = [1]
-b = a.copy()
-print(a,b)
