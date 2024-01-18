@@ -4,6 +4,7 @@ import numpy
 from sand_test import *
 from PIL import Image
 from photo_refactor import black_and_white
+import button
 
 # Initialize Pygame
 pygame.init()
@@ -11,12 +12,18 @@ pygame.init()
 # Set up the window
 cell_size = 10
 N = 80
+
+cell_size = 4
+N = 200
+
 width, height = N * cell_size, N * cell_size
-window = pygame.display.set_mode((width, height))
+window = pygame.display.set_mode((width + 400, height))
 pygame.display.set_caption("Sand Simulator")
 
+initial_board = black_and_white("3.jpg", "11.jpg", N)
 
-initial_board = black_and_white("1.jpg", "11.jpg", N)
+start_img = pygame.image.load('start_btn.png').convert_alpha()
+test_button = button.Button(width + 200, 400, start_img, 0.8)
 
 black = (0, 0, 0)
 white = (200, 200, 200)
@@ -69,33 +76,35 @@ while True:
         if event.type == pygame.QUIT:
             pygame.quit()
             sys.exit()
+
         # Handle mouse events for drawing live cells
         if event.type == pygame.MOUSEBUTTONDOWN:
             if event.button == 1:
-                drawing = True
                 x, y = event.pos
-                col = x // cell_size % N
-                row = y // cell_size % N
-                matrix[row, col].val = - matrix[row, col].val + 1
-                all_sand.append(matrix[row, col])
-                print(matrix[row, col])
-                all_sand = new_alive_list(matrix, N)#cos
+                if x < width:
+                    drawing = True
+                    col = x // cell_size
+                    row = y // cell_size
+                    matrix[row, col].val = - matrix[row, col].val + 1
+                    all_sand.append(matrix[row, col])
+                    print(matrix[row, col])
+                    all_sand = new_alive_list(matrix, N)  # cos
 
         elif event.type == pygame.MOUSEMOTION and drawing:
             x, y = event.pos
-            col = x // cell_size % N
-            row = y // cell_size % N
-            matrix[row, col].val = - matrix[row, col].val + 1
-            all_sand.append(matrix[row, col])
-            all_sand = new_alive_list(matrix, N)#cos
+            if 0 < x < width:
+                col = x // cell_size
+                row = y // cell_size
+                matrix[row, col].val = - matrix[row, col].val + 1
+                all_sand.append(matrix[row, col])
+                all_sand = new_alive_list(matrix, N)  # cos
 
         elif event.type == pygame.MOUSEBUTTONUP:
             if event.button == 1:
                 drawing = False
 
-
         if event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE:
-            all_sand = let_them_fall2(all_sand)
+            all_sand = let_them_fall3(all_sand)
 
         if event.type == pygame.KEYDOWN and event.key == pygame.K_F10:
             continuos_sim = - continuos_sim + 1
@@ -106,11 +115,17 @@ while True:
                     matrix[i, j].val = 0
             all_sand = new_alive_list(matrix, N)  # cos
 
+    # Sprawdź, czy przycisk testowy został naciśnięty
+    if test_button.draw(window):
+        print('dziala')
+
     if continuos_sim == 1:
-        all_sand = let_them_fall2(all_sand)
+        all_sand = let_them_fall3(all_sand)
 
     window.fill(black)
 
+    # Rysuj przycisk testowy
+    test_button.draw(window)
 
     for i in range(N):
         for j in range(N):

@@ -8,7 +8,7 @@ from photo_refactor import black_and_white
 pygame.init()
 
 cell_size = 10
-N = 80
+N = 100
 width, height = N * cell_size, N * cell_size
 window = pygame.display.set_mode((width, height))
 pygame.display.set_caption("Game Of Life")
@@ -17,7 +17,7 @@ black = (0, 0, 0)
 white = (200, 200, 200)
 grey = (169, 169, 169)
 
-initial_board = black_and_white("1.jpg", "11.jpg", N)
+initial_board = black_and_white("3.jpg", "11.jpg", N)
 
 matrix = initial_board
 testarr = numpy.array([[0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0]])
