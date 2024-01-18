@@ -15,7 +15,7 @@ width, height = N * cell_size, N * cell_size
 window = pygame.display.set_mode((width, height))
 pygame.display.set_caption("Sand Simulator")
 
-initial_board = black_and_white("XD.JPG", "11.jpg", N)
+initial_board = black_and_white("3.JPG", "11.jpg", N)
 
 black = (0, 0, 0)
 white = (200, 200, 200)

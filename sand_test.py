@@ -137,7 +137,7 @@ def let_them_fall3(all_sand):
     new_sand = []
     random.shuffle(all_sand)
     for i in all_sand:
-        new_sand.append(i.kordyceps())
+        new_sand.append(i.fall3())
     return new_sand
 
 
