@@ -44,14 +44,12 @@ def game_of_life_simulation(N, cell_size):
                     col = x // cell_size % N
                     row = y // cell_size % N
                     matrix[row, col] = 1
-                    live_cells_count = numpy.sum(matrix)
 
             elif event.type == pygame.MOUSEMOTION and drawing:
                 x, y = event.pos
                 col = x // cell_size % N
                 row = y // cell_size % N
                 matrix[row, col] = 1
-                live_cells_count = numpy.sum(matrix)
 
             elif event.type == pygame.MOUSEBUTTONUP:
                 if event.button == 1:
@@ -59,12 +57,10 @@ def game_of_life_simulation(N, cell_size):
 
             if event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE:
                 matrix = next_matrix(matrix, N, dead_or_alive, arr)
-                live_cells_count = numpy.sum(matrix)
                 generation_count += 1
 
             if event.type == pygame.KEYDOWN and event.key == pygame.K_r:
                 matrix[:,:] = 0
-                live_cells_count = numpy.sum(matrix)
                 generation_count = 0
 
             if event.type == pygame.KEYDOWN and event.key == pygame.K_MINUS:
@@ -82,17 +78,18 @@ def game_of_life_simulation(N, cell_size):
 
         if continuos_sim == 1:
             matrix = next_matrix(matrix, N, dead_or_alive, arr)
-            live_cells_count = numpy.sum(matrix)
             generation_count += 1
 
         window.fill(white)
 
-        # Draw live cells with borders
+        live_cells_count = 0
+
         for i in range(N):
             for j in range(N):
                 if matrix[i, j] == 1:
                     rect = pygame.Rect(j * cell_size, i * cell_size, cell_size, cell_size)
                     pygame.draw.rect(window, black, rect)
+                    live_cells_count = live_cells_count + 1
 
         for i in range(N + 1):
             pygame.draw.line(window, grey, (i * cell_size, 0), (i * cell_size, height), 1)
