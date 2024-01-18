@@ -27,7 +27,7 @@ for i in range(N - 1):
     matrix[11, i].neighbours.append(matrix[11, i + 1])
 for i in range(N - 1):
     matrix[10, i + 1].neighbours.append(matrix[10, i])
-spawners.add_spawner(Spawner(matrix[11, 0],3))
+spawners.add_spawner(Spawner(matrix[11, 0], 3))
 spawners.add_spawner(Spawner(matrix[10, N - 1], 3))
 
 cars = []
@@ -48,6 +48,11 @@ crossroad1.add_exit(matrix[10, 6])
 
 crossroad1.create_paths()
 
+crossroad1.remove_path(matrix[6, 10], matrix[6, 11])
+crossroad1.remove_path(matrix[10, 15], matrix[11, 15])
+crossroad1.remove_path(matrix[15, 11], matrix[15, 10])
+crossroad1.remove_path(matrix[11, 6], matrix[10, 6])
+
 width, height = N * cell_size, N * cell_size
 window = pygame.display.set_mode((width, height))
 pygame.display.set_caption("Sand Simulator")
@@ -58,7 +63,6 @@ black = (0, 0, 0)
 white = (200, 200, 200)
 grey = (50, 50, 50)
 yellow = (204, 204, 0)
-
 
 # Variable to track mouse state
 drawing = False

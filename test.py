@@ -178,4 +178,33 @@ c=[0,0]
 c[0]=a[0]*b[0]+a[1]*b[1]
 c[1]=a[1]*b[0]-a[0]*b[1]
 print(c)
-
+#
+# list_of_lists = [
+#     [1, 2, 3, 4],
+#     [3, 4, 5, 6],
+#     [7, 8, 9, 10],
+#     [3, 4, 11, 12]
+# ]
+#
+# # Create a dictionary to store the indices of each element
+# element_indices = {}
+#
+# # Iterate through each list in the list of lists
+# for list_index, sublist in enumerate(list_of_lists):
+#     # Iterate through each element in the sublist
+#     for element_index, element in enumerate(sublist):
+#         # If the element is already in the dictionary, add the current index
+#         if element in element_indices:
+#             element_indices[element].append((list_index, element_index))
+#         else:
+#             # Otherwise, create a new list for the element with the current index
+#             element_indices[element] = [(list_index, element_index)]
+#
+# # Filter elements that appear in more than one sublist
+# common_elements = {element: indices for element, indices in element_indices.items() if len(indices) > 1}
+#
+# # Print the common elements and their occurrences
+# for element, indices_list in common_elements.items():
+#     print(f"Element {element} appears in:")
+#     for list_index, element_index in indices_list:
+#         print(f"  List {list_index} at index {element_index}")

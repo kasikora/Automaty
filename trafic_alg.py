@@ -12,9 +12,11 @@ class Road:
         self.neighbours = []
 
         self.just_follow_the_orders = []
+        self.just_follow_the_orders_vector_direction = []
+
         self.from_entrance = None
         self.stop = False
-        self.cords = [i, j]
+        self.coords = [i, j]
 
         self.ahead = None
         self.left = None
@@ -123,29 +125,31 @@ class OmniPresentCrossroad:  # robienie tras w skrzyzowaniiach musza juz istniec
         self.paths = []
         self.my_roads = []
 
+        self.entrance_object_list = []
+
+    class Entrance:
+        def __init__(self, entrance_road):
+            self.entrance_road = entrance_road
+            self.paths = []
+
+        def set_paths(self, all_paths):
+            for path in all_paths:
+                if path[0] is self.entrance_road:
+                    self.paths.append(path)
+
+    def create_entrance_object_list(self):
+        for entrance in self.all_entrance:
+            tmp_entrance = OmniPresentCrossroad.Entrance(entrance)
+            tmp_entrance.set_paths(self.paths)
+            self.entrance_object_list.append(tmp_entrance)
+
     def add_entrance(self, crossroad_entrance):
         self.all_entrance.append(crossroad_entrance)
 
     def add_exit(self, crossroad_exit):
         self.all_exit.append(crossroad_exit)
 
-    def function(self, current_path):  # todo nazwac to jakos i przetestowac
-        new_path = []
-        for next_node in current_path[-1].neighbours:
-            if next_node in current_path:
-                return None
-            new_path = current_path.copy()
-            print("tutaj: ", new_path)
-            new_path.append(next_node)
-            if next_node in self.all_exit:
-                self.paths.append(new_path)
-                return None
-            if len(new_path) > 100:
-                print("Path to long  ?mising exit?")
-                return None
-            self.function(new_path)
-
-    def function2(self, current_path):
+    def function(self, current_path):
         this_node = current_path[-1]
         if len(current_path) > 1:
             if this_node in current_path[:-1]:
@@ -159,7 +163,7 @@ class OmniPresentCrossroad:  # robienie tras w skrzyzowaniiach musza juz istniec
         for node in this_node.neighbours:
             new_path = current_path.copy()
             new_path.append(node)
-            self.function2(new_path)
+            self.function(new_path)
 
     def create_paths(self):
         print(self.all_entrance)
@@ -167,8 +171,16 @@ class OmniPresentCrossroad:  # robienie tras w skrzyzowaniiach musza juz istniec
         for entrance in self.all_entrance:
             tmp_path = []
             tmp_path.append(entrance)
-            self.function2(tmp_path)
+            self.function(tmp_path)
         print(self.paths, "\n", len(self.paths))
+        self.create_entrance_object_list()
+
+    def remove_path(self, entrance_object, exit_object):
+        for i in range(len(self.paths)):
+            if self.paths[i][0] is entrance_object and self.paths[i][-1] is exit_object:
+                self.paths.pop(i)
+                print(len(self.paths))
+                break
 
     def give_orders(self):
         for entrance in self.all_entrance:
@@ -190,19 +202,41 @@ class OmniPresentCrossroad:  # robienie tras w skrzyzowaniiach musza juz istniec
                 if node not in self.my_roads:
                     self.my_roads.append(node)
 
-    def basic_rule(self):  # todo wymyslic skad wziac kierunek sciezki
-        cars = []
-        for node in self.my_roads:
-            if node.has_car:
-                cars.append(node)
-        for car1 in cars:
-            for car2 in cars:
-                if car1 is not car2:
-                    for i in range(min(len(car1.just_follow_the_orders), len(car2.just_follow_the_orders)) - 1):
-                        if car1.just_follow_the_orders[i] is car2.just_follow_the_orders[i]:
-                            car1.stop = True
-                        if car1.just_follow_the_orders[i] is car2.just_follow_the_orders[i + 1]:
-                            car1.stop = True
+    def right_hand_rule(self):  # todo wymyslic skad wziac kierunek sciezki
+        # cars = []
+        # for node in
+        #     if node.has_car:
+        #         cars.append(node)
+
+        colliding_node_dict = {}
+        for car_index, road in enumerate(self.my_roads):
+            if road.has_car:
+                for node_index, node in enumerate(road.just_follow_the_orders):
+                    if node in colliding_node_dict:
+                        colliding_node_dict[node].append([car_index, node_index])
+                    else:
+                        colliding_node_dict[node] = [[car_index, node_index]]
+        for node in colliding_node_dict:
+            for n1 in node:
+                for n2 in node:
+                    if n1 is not n2:
+
+                        a = self.my_roads[n1[0]].just_follow_the_orders[n1[1]].coords
+                        b = self.my_roads[n2[0]].just_follow_the_orders[n2[1]].coords
+                        c = a[1] * b[0] - a[0] * b[1]
+                        if c[1] == 1:
+                            self.my_roads[n2[0]].stop = True
+                        if c[1] == -1:
+                            self.my_roads[n1[0]].stop = True
+
+        # for car1 in cars:
+        #     for car2 in cars:
+        #         if car1 is not car2:
+        #             for i in range(min(len(car1.just_follow_the_orders), len(car2.just_follow_the_orders)) - 1):
+        #                 if car1.just_follow_the_orders[i] is car2.just_follow_the_orders[i]:
+        #                     car1.stop = True
+        #                 if car1.just_follow_the_orders[i] is car2.just_follow_the_orders[i + 1]:
+        #                     car1.stop = True
 
     # todo samochod czeka gdzy jego sciezke przecina inny z indexem rownym lub o 1 wiekszym
     # def wath_entrance(self):
