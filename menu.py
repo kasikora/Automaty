@@ -1,14 +1,14 @@
 import sys
 import random
 import pygame
-
+from GUILife import game_of_life_simulation
 
 pygame.init()
 
 # Ustawienia okna gry
 WIDTH, HEIGHT = 800, 800
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
-pygame.display.set_caption("Menu w Pygame")
+pygame.display.set_caption("Automaty")
 
 
 WHITE = (255, 255, 255)
@@ -41,7 +41,8 @@ def main_menu():
                 x, y = event.pos
                 if game_of_life_button.collidepoint(x, y):
                     try:
-                        exec(open("GUILife.py").read())
+                        # exec(open("GUILife.py").read())
+                        game_of_life_simulation(100, 10)
                     except Exception as e:
                         print(f"Błąd: {e}")
                 elif sand_simulator_button.collidepoint(x, y):

@@ -26,6 +26,7 @@ start_img = pygame.image.load('start_btn.png').convert_alpha()
 test_button = button.Button(width + 100, 200, start_img, 0.8)
 
 black = (0, 0, 0)
+white = (200, 200, 200)
 grey = (50, 50, 50)
 yellow = (204, 204, 0)
 
@@ -38,12 +39,28 @@ for i in range(N):
 for i in range(N):
     for j in range(N):
         matrix[i, j].val = 1 if initial_board[i, j] == 1 else 0
+        #matrix[i, j].val = -matrix[i, j].val+1
+# for i in range(N // 20):
+#     for j in range(N):
+#         matrix[i, j].val = 1
 
 for i in range(N - 1):
     for j in range(N - 2):
         matrix[i, j + 1].left = matrix[i + 1, j - 1 + 1]
         matrix[i, j + 1].center = matrix[i + 1, j + 1]
         matrix[i, j + 1].right = matrix[i + 1, j + 1 + 1]
+
+print(matrix)
+
+all_sand = []
+for i in range(N):
+    for j in range(N):
+        if matrix[i, j].val == 1:
+            all_sand.append(matrix[i, j])
+
+print("\n", matrix)
+# all_sand.reverse()
+print(all_sand)
 
 all_sand = new_alive_list(matrix, N)
 
@@ -54,7 +71,8 @@ binary_image = Image.open(processed_image_path)
 drawing = False
 
 continuos_sim = 0
-tick = 40
+tick = 100
+press = 0
 
 # Run the game loop
 while True:

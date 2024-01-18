@@ -4,18 +4,21 @@ import numpy
 
 numpy.set_printoptions(linewidth=256)
 
-
 class Road:
     def __init__(self):
         self.has_car = 0
-        self.ahead = None
-        self.left = None
-        self.right = None
+
         self.neighbours = []
-        self.next_neighbour = None
+
         self.just_follow_the_orders = []
         self.from_entrance = None
         self.stop = False
+        self.cords = [None, None]
+
+        self.ahead = None
+        self.left = None
+        self.right = None
+        self.next_neighbour = None
 
     def clear_neighbour_list(self):
         self.neighbours = []
