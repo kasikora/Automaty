@@ -63,7 +63,7 @@ binary_image = Image.open(processed_image_path)
 drawing = False
 
 continuos_sim = 0
-tick = 40
+tick = 100
 press = 0
 
 # Run the game loop
