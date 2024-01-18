@@ -10,7 +10,7 @@ import button
 pygame.init()
 
 # Set up the window
-cell_size = 4
+cell_size = 2
 N = 200
 
 width, height = N * cell_size, N * cell_size
@@ -87,7 +87,7 @@ while True:
         if event.type == pygame.MOUSEBUTTONDOWN:
             if event.button == 1:
                 x, y = event.pos
-                if x < width:
+                if 0 < x < width and height > y > 0:
                     drawing = True
                     col = x // cell_size
                     row = y // cell_size
@@ -98,7 +98,7 @@ while True:
 
         elif event.type == pygame.MOUSEMOTION and drawing:
             x, y = event.pos
-            if 0 < x < width:
+            if 0 < x < width and height > y > 0:
                 col = x // cell_size
                 row = y // cell_size
                 matrix[row, col].val = - matrix[row, col].val + 1
