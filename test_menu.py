@@ -24,25 +24,25 @@ while running:
         if event.type == pygame.QUIT:
             running = False
 
-        elif game_of_life_button.draw(screen):
+        if game_of_life_button.draw(screen):
             try:
                 #pygame.quit()
                 exec(open("GUILife.py").read())
             except Exception as e:
                 print(f"Błąd: {e}")
-        elif sand_simulator_button.draw(screen):
+        if sand_simulator_button.draw(screen):
             try:
                 exec(open("GUISand.py").read())
             except Exception as e:
                 print(f"Błąd: {e}")
-        elif traffic_simulator_button.draw(screen):
+        if traffic_simulator_button.draw(screen):
             try:
                 exec(open("trafic_alg.py").read())
             except Exception as e:
                 print(f"Błąd: {e}")
-        elif quit_button.draw(screen):
+        if quit_button.draw(screen):
             running = False
-        elif event.type == pygame.KEYDOWN:
+        if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_r:  # Wciśnięcie klawisza "R" spowoduje zmianę rozdzielczości
                 new_width = 1600
                 new_height = 400

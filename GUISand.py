@@ -10,9 +10,6 @@ import button
 pygame.init()
 
 # Set up the window
-cell_size = 10
-N = 80
-
 cell_size = 4
 N = 200
 
@@ -20,13 +17,15 @@ width, height = N * cell_size, N * cell_size
 window = pygame.display.set_mode((width + 400, height))
 pygame.display.set_caption("Sand Simulator")
 
+# Utwórz subsurface dla obszaru gry
+game_area = window.subsurface(pygame.Rect((0, 0, width, height)))
+
 initial_board = black_and_white("3.JPG", "11.jpg", N)
 
 start_img = pygame.image.load('start_btn.png').convert_alpha()
-test_button = button.Button(width + 200, 400, start_img, 0.8)
+test_button = button.Button(width + 100, 200, start_img, 0.8)
 
 black = (0, 0, 0)
-white = (200, 200, 200)
 grey = (50, 50, 50)
 yellow = (204, 204, 0)
 
@@ -39,28 +38,12 @@ for i in range(N):
 for i in range(N):
     for j in range(N):
         matrix[i, j].val = 1 if initial_board[i, j] == 1 else 0
-        #matrix[i, j].val = -matrix[i, j].val+1
-# for i in range(N // 20):
-#     for j in range(N):
-#         matrix[i, j].val = 1
 
 for i in range(N - 1):
     for j in range(N - 2):
         matrix[i, j + 1].left = matrix[i + 1, j - 1 + 1]
         matrix[i, j + 1].center = matrix[i + 1, j + 1]
         matrix[i, j + 1].right = matrix[i + 1, j + 1 + 1]
-
-print(matrix)
-
-all_sand = []
-for i in range(N):
-    for j in range(N):
-        if matrix[i, j].val == 1:
-            all_sand.append(matrix[i, j])
-
-print("\n", matrix)
-# all_sand.reverse()
-print(all_sand)
 
 all_sand = new_alive_list(matrix, N)
 
@@ -72,11 +55,12 @@ drawing = False
 
 continuos_sim = 0
 tick = 40
-press = 0
 
 # Run the game loop
 while True:
     for event in pygame.event.get():
+        # Wypełnij obszar gry kolorem czarnym
+
         if event.type == pygame.QUIT:
             pygame.quit()
             sys.exit()
@@ -107,6 +91,9 @@ while True:
             if event.button == 1:
                 drawing = False
 
+        if test_button.draw(window):
+            print('dziala2')
+
         if event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE:
             all_sand = let_them_fall3(all_sand)
 
@@ -119,27 +106,21 @@ while True:
                     matrix[i, j].val = 0
             all_sand = new_alive_list(matrix, N)  # cos
 
-    # Sprawdź, czy przycisk testowy został naciśnięty
-    if test_button.draw(window):
-        print('dziala')
-
     if continuos_sim == 1:
         all_sand = let_them_fall3(all_sand)
-
-    window.fill(black)
-
+    game_area.fill(black)
     # Rysuj przycisk testowy
-    test_button.draw(window)
+    #test_button.draw(window)
 
     for i in range(N):
         for j in range(N):
             if matrix[i, j].val == 1:
                 rect = pygame.Rect(j * cell_size, i * cell_size, cell_size, cell_size)
-                pygame.draw.rect(window, yellow, rect)
+                pygame.draw.rect(game_area, yellow, rect)
 
     for i in range(N + 1):
-        pygame.draw.line(window, grey, (i * cell_size, 0), (i * cell_size, height), 1)
-        pygame.draw.line(window, grey, (0, i * cell_size), (width, i * cell_size), 1)
+        pygame.draw.line(game_area, grey, (i * cell_size, 0), (i * cell_size, height), 1)
+        pygame.draw.line(game_area, grey, (0, i * cell_size), (width, i * cell_size), 1)
 
     pygame.display.flip()
     pygame.time.Clock().tick(tick)
