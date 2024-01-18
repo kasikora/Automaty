@@ -36,17 +36,6 @@ for i in spawners.list_of_spawners:
 
 crossroad1 = OmniPresentCrossroad()
 
-# crossroad1.add_entrance(matrix[9, 10])
-# crossroad1.add_entrance(matrix[10, 12])
-# crossroad1.add_entrance(matrix[12, 11])
-# crossroad1.add_entrance(matrix[11, 9])
-#
-# crossroad1.add_exit(matrix[9, 11])
-# crossroad1.add_exit(matrix[11, 12])
-# crossroad1.add_exit(matrix[12, 10])
-# crossroad1.add_exit(matrix[10, 9])
-
-
 crossroad1.add_entrance(matrix[6, 10])
 crossroad1.add_entrance(matrix[10, 15])
 crossroad1.add_entrance(matrix[15, 11])
@@ -58,13 +47,6 @@ crossroad1.add_exit(matrix[15, 10])
 crossroad1.add_exit(matrix[10, 6])
 
 crossroad1.create_paths()
-
-# for i in range(30):
-#     spawners.spawn_all(cars)
-#     crossroad1.give_orders()
-#     print(cars)
-#     cars = cars_go(cars)
-#     print("\n", matrix)
 
 width, height = N * cell_size, N * cell_size
 window = pygame.display.set_mode((width, height))
@@ -91,29 +73,6 @@ while True:
         if event.type == pygame.QUIT:
             pygame.quit()
             sys.exit()
-        # Handle mouse events for drawing live cells
-        # if event.type == pygame.MOUSEBUTTONDOWN:
-        #     if event.button == 1:
-        #         drawing = True
-        #         x, y = event.pos
-        #         col = x // cell_size % N
-        #         row = y // cell_size % N
-        #         matrix[row, col].val = - matrix[row, col].val + 1
-        #         all_sand.append(matrix[row, col])
-        #         print(matrix[row, col])
-        #         all_sand = new_alive_list(matrix, N)  # cos
-        #
-        # elif event.type == pygame.MOUSEMOTION and drawing:
-        #     x, y = event.pos
-        #     col = x // cell_size % N
-        #     row = y // cell_size % N
-        #     matrix[row, col].val = - matrix[row, col].val + 1
-        #     all_sand.append(matrix[row, col])
-        #     all_sand = new_alive_list(matrix, N)  # cos
-        #
-        # elif event.type == pygame.MOUSEBUTTONUP:
-        #     if event.button == 1:
-        #         drawing = False
 
         if event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE:
             spawners.spawn_all(cars)
