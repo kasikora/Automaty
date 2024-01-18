@@ -10,8 +10,8 @@ import button
 pygame.init()
 
 # Set up the window
-cell_size = 2
-N = 200
+cell_size = 10
+N = 100
 
 width, height = N * cell_size, N * cell_size
 window = pygame.display.set_mode((width + 400, height))
@@ -71,7 +71,7 @@ binary_image = Image.open(processed_image_path)
 drawing = False
 
 continuos_sim = 0
-tick = 100
+tick = 60
 press = 0
 
 # Run the game loop

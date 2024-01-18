@@ -1,6 +1,7 @@
 
 import pygame
 import button
+from GUILife import game_of_life_simulation
 
 pygame.init()
 
@@ -27,7 +28,7 @@ while running:
         if game_of_life_button.draw(screen):
             try:
                 #pygame.quit()
-                exec(open("GUILife.py").read())
+                game_of_life_simulation(100, 10)
             except Exception as e:
                 print(f"Błąd: {e}")
         if sand_simulator_button.draw(screen):

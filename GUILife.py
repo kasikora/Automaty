@@ -3,12 +3,14 @@ import sys
 import numpy
 from game_of_life_alg import omnipresent_perception, next_matrix, ar_insert
 from photo_refactor import black_and_white
+import button
+
 def game_of_life_simulation(N, cell_size):
 
     pygame.init()
 
     width, height = N * cell_size, N * cell_size
-    window = pygame.display.set_mode((width, height))
+    window = pygame.display.set_mode((width + 400, height))
     pygame.display.set_caption("Game Of Life")
 
     black = (0, 0, 0)
@@ -16,7 +18,12 @@ def game_of_life_simulation(N, cell_size):
     grey = (169, 169, 169)
     red = (255, 0, 0)
 
+    game_area = window.subsurface(pygame.Rect((0, 0, width, height)))
+
     initial_board = black_and_white("3.jpg", "11.jpg", N)
+    start_img = pygame.image.load('start_btn.png').convert_alpha()
+    test_button = button.Button(width + 100, 200, start_img, 0.8)
+
     matrix = initial_board
     data = omnipresent_perception()
     dead_or_alive = data[0]
@@ -39,17 +46,20 @@ def game_of_life_simulation(N, cell_size):
 
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if event.button == 1:
-                    drawing = True
                     x, y = event.pos
-                    col = x // cell_size % N
-                    row = y // cell_size % N
-                    matrix[row, col] = 1
+                    if 0 < x < width and height > y > 0:
+                        drawing = True
+                        x, y = event.pos
+                        col = x // cell_size % N
+                        row = y // cell_size % N
+                        matrix[row, col] = 1
 
             elif event.type == pygame.MOUSEMOTION and drawing:
                 x, y = event.pos
-                col = x // cell_size % N
-                row = y // cell_size % N
-                matrix[row, col] = 1
+                if 0 < x < width and height > y > 0:
+                    col = x // cell_size % N
+                    row = y // cell_size % N
+                    matrix[row, col] = 1
 
             elif event.type == pygame.MOUSEBUTTONUP:
                 if event.button == 1:
@@ -69,18 +79,18 @@ def game_of_life_simulation(N, cell_size):
                 print(tick)
 
             if event.type == pygame.KEYDOWN and event.key == pygame.K_EQUALS:
-                if tick < 55:
+                if tick < 75:
                     tick = tick + 5
                 print(tick)
 
-            if event.type == pygame.KEYDOWN and event.key == pygame.K_F10:
+            if test_button.draw(window) or (event.type == pygame.KEYDOWN and event.key == pygame.K_F10):
                 continuos_sim = -continuos_sim + 1
 
         if continuos_sim == 1:
             matrix = next_matrix(matrix, N, dead_or_alive, arr)
             generation_count += 1
 
-        window.fill(white)
+        game_area.fill(white)
 
         live_cells_count = 0
 
