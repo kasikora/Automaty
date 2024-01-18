@@ -55,7 +55,7 @@ def ar_insert(matrix, arToInsert, posi, posj):
 
 
 ## example of use
-N = 30
+N = 20
 
 # wymuszam poczotkowy stan
 matrix = numpy.zeros((N, N)).astype(numpy.int16)

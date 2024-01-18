@@ -20,7 +20,7 @@ width, height = N * cell_size, N * cell_size
 window = pygame.display.set_mode((width + 400, height))
 pygame.display.set_caption("Sand Simulator")
 
-initial_board = black_and_white("3.jpg", "11.jpg", N)
+initial_board = black_and_white("3.JPG", "11.jpg", N)
 
 start_img = pygame.image.load('start_btn.png').convert_alpha()
 test_button = button.Button(width + 200, 400, start_img, 0.8)
@@ -39,6 +39,10 @@ for i in range(N):
 for i in range(N):
     for j in range(N):
         matrix[i, j].val = 1 if initial_board[i, j] == 1 else 0
+        #matrix[i, j].val = -matrix[i, j].val+1
+# for i in range(N // 20):
+#     for j in range(N):
+#         matrix[i, j].val = 1
 
 for i in range(N - 1):
     for j in range(N - 2):
