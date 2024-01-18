@@ -4,8 +4,9 @@ import numpy
 
 numpy.set_printoptions(linewidth=256)
 
+
 class Road:
-    def __init__(self):
+    def __init__(self, i=None, j=None):
         self.has_car = 0
 
         self.neighbours = []
@@ -13,7 +14,7 @@ class Road:
         self.just_follow_the_orders = []
         self.from_entrance = None
         self.stop = False
-        self.cords = [None, None]
+        self.cords = [i, j]
 
         self.ahead = None
         self.left = None
@@ -234,7 +235,7 @@ class OmniPresentCrossroad:  # robienie tras w skrzyzowaniiach musza juz istniec
 class Spawner:
     def __init__(self, spawnpoint_road_object, frequency_spawn_percentage_chance=20):
         self.spawnpoint = spawnpoint_road_object
-        self.frequency = frequency_spawn_percentage_chance
+        self.frequency = frequency_spawn_percentage_chance % 99
         print(self.frequency)
 
     def spawn(self, car_list):
@@ -261,7 +262,7 @@ def make_road_matrix(N):
     matrix = numpy.empty((N, N), dtype=Road)
     for i in range(N):
         for j in range(N):
-            matrix[i, j] = Road()
+            matrix[i, j] = Road(i, j)
     print(matrix)
     return matrix
 
