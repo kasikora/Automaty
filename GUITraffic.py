@@ -70,10 +70,10 @@ for i in range(N):
     for j in range(N):
         if matrix[i, j].neighbours:
             if matrix[i, j] not in draw_road:
-                draw_road.append(matrix[i, j].cords)
+                draw_road.append(matrix[i, j].coords)
             for neighbour in matrix[i, j].neighbours:
                 if neighbour not in draw_road:
-                    draw_road.append(neighbour.cords)
+                    draw_road.append(neighbour.coords)
 
 print(draw_road)
 print (len(draw_road))
