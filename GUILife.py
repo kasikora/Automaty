@@ -4,6 +4,8 @@ import numpy
 from game_of_life_alg import omnipresent_perception, next_matrix, ar_insert
 from photo_refactor import black_and_white
 import button
+import tkinter as tk
+from tkinter import filedialog
 
 def game_of_life_simulation(N, cell_size):
 
@@ -20,7 +22,7 @@ def game_of_life_simulation(N, cell_size):
 
     game_area = window.subsurface(pygame.Rect((0, 0, width, height)))
 
-    initial_board = black_and_white("3.jpg", "11.jpg", N)
+    initial_board = black_and_white("3.jpg", N)
 
     start_img = pygame.image.load('start_btn.png').convert_alpha()
     simtype_img = pygame.image.load('texturepack/simtype_life.jpg').convert_alpha()
@@ -127,7 +129,14 @@ def game_of_life_simulation(N, cell_size):
                 print('dziala2')
 
             if picture_button.draw(window):
-                print('dziala2')
+                root = tk.Tk()
+                root.withdraw()  # Hide the main window
+                file_path = filedialog.askopenfilename(title="Choose a photo",
+                                                       filetypes=[("Image files", "*.png;*.jpg;*.jpeg")])
+                if file_path:
+                    initial_board = black_and_white(file_path, N)
+                    matrix = initial_board
+
 
         if continuos_sim == 1:
             matrix = next_matrix(matrix, N, dead_or_alive, arr)

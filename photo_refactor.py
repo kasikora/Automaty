@@ -2,7 +2,7 @@ from PIL import Image
 import numpy as np
 np.set_printoptions(linewidth=1024)
 
-def black_and_white(input_path, output_path, pixel_size):
+def black_and_white(input_path, pixel_size):
     # Open the image
     image = Image.open(input_path)
 
@@ -21,8 +21,6 @@ def black_and_white(input_path, output_path, pixel_size):
     # Create a binary (black and white) image by thresholding
     binary_image = grayscale_image.point(lambda p: p > threshold and 255)
     small_image = binary_image.resize((pixel_size, pixel_size), resample=Image.NEAREST)
-
-    small_image.save(output_path) #zapisywanie, mozna usunac
 
     image_array = np.array(small_image).astype(np.int16)
     print(type(image_array[0,0]))

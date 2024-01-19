@@ -25,9 +25,8 @@ class Button():
 			self.clicked = False
 
 		#draw button on screen
-		#print(self.rect.y)
+
 		surface.blit(self.image, (self.rect.x, self.rect.y))
-		print(self.rect)
 		return action
 
 	def scaling(self, old_screen_width , old_screen_height, new_screen_width, new_screen_height):
