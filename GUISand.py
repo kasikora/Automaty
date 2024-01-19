@@ -77,9 +77,6 @@ def sand_simulation(N, cell_size):
 
     all_sand = new_alive_list(matrix, N)
 
-    processed_image_path = "1.jpg"
-    binary_image = Image.open(processed_image_path)
-
     drawing = False
 
     continuos_sim = 0
