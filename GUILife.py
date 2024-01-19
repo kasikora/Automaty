@@ -24,7 +24,6 @@ def game_of_life_simulation(N, cell_size):
 
     initial_board = black_and_white("3.jpg", N)
 
-    start_img = pygame.image.load('start_btn.png').convert_alpha()
     simtype_img = pygame.image.load('texturepack/simtype_life.jpg').convert_alpha()
     resize_img = pygame.image.load('texturepack/resize_life.jpg').convert_alpha()
     plus_img = pygame.image.load('texturepack/plus_life.jpg').convert_alpha()
@@ -129,8 +128,9 @@ def game_of_life_simulation(N, cell_size):
                 print('dziala2')
 
             if picture_button.draw(window):
+                generation_count = 0
                 root = tk.Tk()
-                root.withdraw()  # Hide the main window
+                root.withdraw()
                 file_path = filedialog.askopenfilename(title="Choose a photo",
                                                        filetypes=[("Image files", "*.png;*.jpg;*.jpeg")])
                 if file_path:
@@ -182,4 +182,4 @@ def game_of_life_simulation(N, cell_size):
 
         pygame.time.Clock().tick(tick)
 
-game_of_life_simulation(100, 10)
+# game_of_life_simulation(100, 10)
