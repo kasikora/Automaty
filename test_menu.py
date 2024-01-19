@@ -1,7 +1,7 @@
-
 import pygame
 import button
 from GUILife import game_of_life_simulation
+from GUISand import sand_simulation
 
 pygame.init()
 
@@ -27,13 +27,12 @@ while running:
 
         if game_of_life_button.draw(screen):
             try:
-                #pygame.quit()
                 game_of_life_simulation(100, 10)
             except Exception as e:
                 print(f"Błąd: {e}")
         if sand_simulator_button.draw(screen):
             try:
-                exec(open("GUISand.py").read())
+                sand_simulation(100, 10)
             except Exception as e:
                 print(f"Błąd: {e}")
         if traffic_simulator_button.draw(screen):
