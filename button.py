@@ -29,7 +29,7 @@ class Button():
 		surface.blit(self.image, (self.rect.x, self.rect.y))
 		return action
 
-	def scaling(self, old_screen_width , old_screen_height, new_screen_width, new_screen_height):
+	def scaling(self, old_screen_width, old_screen_height, new_screen_width, new_screen_height):
 		x_scale = new_screen_width/old_screen_width
 		y_scale = new_screen_height/old_screen_height
 		old_x = self.rect.x
@@ -40,3 +40,4 @@ class Button():
 		#scaling placement of the button
 		self.rect.x = old_x * x_scale
 		self.rect.y = old_y * y_scale
+

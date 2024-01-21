@@ -1,3 +1,5 @@
+from tkinter.simpledialog import askinteger
+
 import pygame
 import sys
 import numpy
@@ -10,12 +12,15 @@ import tkinter as tk
 from tkinter import filedialog
 
 
-def sand_simulation(N, cell_size):
+def sand_simulation(N, cell_size, scale_width, scale_height):
 
     pygame.init()
-
+    print('-------------------------------------')
+    print(scale_width, scale_height)
+    print('-------------------------------------')
     width, height = N * cell_size, N * cell_size
-    window = pygame.display.set_mode((width + 400, height))
+    button_window_width = width * 0.4
+    window = pygame.display.set_mode((width + button_window_width, height))
     pygame.display.set_caption("Sand Simulator")
 
     game_area = window.subsurface(pygame.Rect((0, 0, width, height)))
@@ -28,26 +33,28 @@ def sand_simulation(N, cell_size):
     clear_img = pygame.image.load('texturepack/clear_sand.jpg').convert_alpha()
     menu_img = pygame.image.load('texturepack/menu.jpg').convert_alpha()
 
-    button_width = 100
-    button_height = 50
-    button_margin = 20
+    button_width = 100 * scale_width
+    button_height = 50 * scale_height
+    button_margin = 20 * scale_height
 
     total_button_height = 6 * (button_height + button_margin)
-
-    simulation_button = button.Button(width + button_margin, (height - total_button_height) // 2, simtype_img, 0.8)
+    button_scale = 0.6 * (scale_height + scale_width)/2
+    simulation_button = button.Button(width + button_margin, (height - total_button_height) // 2, simtype_img, button_scale)
     reset_button = button.Button(width + button_margin,
-                                 (height - total_button_height) // 2 + (button_height + button_margin), clear_img, 0.8)
+                                 (height - total_button_height) // 2 + (button_height + button_margin), clear_img, button_scale)
     resize_button = button.Button(width + button_margin,
                                   (height - total_button_height) // 2 + 2 * (button_height + button_margin), resize_img,
-                                  0.8)
+                                  button_scale)
     picture_button = button.Button(width + button_margin,
                                    (height - total_button_height) // 2 + 3 * (button_height + button_margin), picture_img,
-                                   0.8)
+                                   button_scale)
     menu_button = button.Button(width + button_margin,
                                 (height - total_button_height) // 2 + 4 * (button_height + button_margin), menu_img,
-                                0.8)
+                                button_scale)
 
-    custom_font = pygame.font.Font("texturepack/RetroGaming.ttf", 25)
+
+    font_size = int(22 * (scale_height + scale_width)/2)
+    custom_font = pygame.font.Font("texturepack/RetroGaming.ttf", font_size)
 
     black = (0, 0, 0)
     white = (200, 200, 200)
@@ -87,7 +94,7 @@ def sand_simulation(N, cell_size):
     tick = 60
     press = 0
 
-    clear_area_rect = pygame.Rect(width, 0, 400, height)
+    clear_area_rect = pygame.Rect(width, 0, button_window_width, height)
     pygame.draw.rect(window, grey, clear_area_rect)
 
     text_space = custom_font.render("Press SPACE to", True, yellow)
@@ -117,7 +124,7 @@ def sand_simulation(N, cell_size):
                         row = y // cell_size
                         matrix[row, col].val = - matrix[row, col].val + 1
                         all_sand.append(matrix[row, col])
-                        print(matrix[row, col])
+                        #print(matrix[row, col])
                         all_sand = new_alive_list(matrix, N)  # cos
 
             elif event.type == pygame.MOUSEMOTION and drawing:
@@ -146,7 +153,32 @@ def sand_simulation(N, cell_size):
                 all_sand = new_alive_list(matrix, N)  # cos
 
             if resize_button.draw(window):
-                print('dziala2')
+
+
+                new_cell_size = askinteger("Resize", "Enter new cell size:")
+                new_N = askinteger("Resize", "Enter new number of cells:")
+                original_width, original_height = 700, 700
+                new_width, new_height = new_N * new_cell_size, new_N * new_cell_size
+                scale_width = new_width/original_width
+                scale_height = new_height/original_height
+                pygame.quit()
+                sand_simulation(new_N, new_cell_size, scale_width, scale_height)
+                # scale = (scale_width + scale_heigth)/2
+                # print(N)
+                # print(cell_size)
+                # N = int(N * scale)
+                # cell_size = int(cell_size * scale)
+                # if N % cell_size == 0:
+                #     sand_simulation(N,cell_size, scale)
+                # else:
+                #     N = N + N % cell_size
+                #     sand_simulation(N,cell_size, scale)
+                # print('---------------------')
+                # print(N)
+                # print(cell_size)
+
+
+
 
             if picture_button.draw(window):
                 generation_count = 0
@@ -201,3 +233,7 @@ def sand_simulation(N, cell_size):
 
         pygame.display.flip()
         pygame.time.Clock().tick(tick)
+
+
+sand_simulation(100,7,1, 1)
+

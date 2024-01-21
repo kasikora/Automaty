@@ -42,7 +42,7 @@ while running:
                 print(f"Błąd: {e}")
         elif sand_simulator_button.draw(screen):
             try:
-                sand_simulation(100, 10)
+                sand_simulation(100, 7,1,1)
             except Exception as e:
                 print(f"Błąd: {e}")
         elif traffic_simulator_button.draw(screen):
