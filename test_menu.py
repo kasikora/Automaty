@@ -47,7 +47,7 @@ while running:
                 print(f"Błąd: {e}")
         elif traffic_simulator_button.draw(screen):
             try:
-                traffic_simulation(22, 20)
+                traffic_simulation(50, 20)
             except Exception as e:
                 print(f"Błąd: {e}")
         elif exit_button.draw(screen):
