@@ -1,3 +1,5 @@
+from tkinter.simpledialog import askinteger
+
 import pygame
 import sys
 import numpy
@@ -7,12 +9,13 @@ import button
 import tkinter as tk
 from tkinter import filedialog
 
-def game_of_life_simulation(N, cell_size):
+def game_of_life_simulation(N, cell_size, scale_width, scale_height):
 
     pygame.init()
 
     width, height = N * cell_size, N * cell_size
-    window = pygame.display.set_mode((width + 400, height))
+    button_window_width = width * 0.4
+    window = pygame.display.set_mode((width + button_window_width, height))
     pygame.display.set_caption("Game Of Life")
 
     black = (0, 0, 0)
@@ -32,24 +35,25 @@ def game_of_life_simulation(N, cell_size):
     clear_img = pygame.image.load('texturepack/clear_life.jpg').convert_alpha()
     menu_img = pygame.image.load('texturepack/menu.jpg').convert_alpha()
 
-    button_width = 100
-    button_height = 50
-    button_margin = 20
+    button_width = 100 * scale_width
+    button_height = 50 * scale_height
+    button_margin = 20 * scale_height
 
     total_button_height = 8 * (button_height + button_margin)
+    button_scale = 0.8 * (scale_height + scale_width)/2
 
-    simulation_button = button.Button(width + button_margin, (height - total_button_height) // 2, simtype_img, 0.8)
-    minus_button = button.Button(width + button_margin, (height - total_button_height) // 2 + (button_height + button_margin), minus_img, 0.8)
-    plus_button = button.Button(width + button_margin, (height - total_button_height) // 2 + 2 * (button_height + button_margin), plus_img, 0.8)
-    reset_button = button.Button(width + button_margin, (height - total_button_height) // 2 + 3 * (button_height + button_margin), clear_img, 0.8)
-    resize_button = button.Button(width + button_margin, (height - total_button_height) // 2 + 4 * (button_height + button_margin), resize_img, 0.8)
-    picture_button = button.Button(width + button_margin, (height - total_button_height) // 2 + 5 * (button_height + button_margin), picture_img, 0.8)
+    simulation_button = button.Button(width + button_margin, (height - total_button_height) // 2, simtype_img, button_scale)
+    minus_button = button.Button(width + button_margin, (height - total_button_height) // 2 + (button_height + button_margin), minus_img, button_scale)
+    plus_button = button.Button(width + button_margin, (height - total_button_height) // 2 + 2 * (button_height + button_margin), plus_img, button_scale)
+    reset_button = button.Button(width + button_margin, (height - total_button_height) // 2 + 3 * (button_height + button_margin), clear_img, button_scale)
+    resize_button = button.Button(width + button_margin, (height - total_button_height) // 2 + 4 * (button_height + button_margin), resize_img, button_scale)
+    picture_button = button.Button(width + button_margin, (height - total_button_height) // 2 + 5 * (button_height + button_margin), picture_img, button_scale)
     menu_button = button.Button(width + button_margin,
                                 (height - total_button_height) // 2 + 6 * (button_height + button_margin), menu_img,
-                                0.8)
+                                button_scale)
 
-
-    custom_font = pygame.font.Font("texturepack/RetroGaming.ttf", 25)
+    font_size = int(25 * (scale_height + scale_width)/2)
+    custom_font = pygame.font.Font("texturepack/RetroGaming.ttf", font_size)
 
     matrix = initial_board
     data = omnipresent_perception()
@@ -129,7 +133,14 @@ def game_of_life_simulation(N, cell_size):
                 continuos_sim = -continuos_sim + 1
 
             if resize_button.draw(window):
-                print('dziala2')
+                new_cell_size = askinteger("Resize", "Enter new cell size:")
+                new_N = askinteger("Resize", "Enter new number of cells:")
+                original_width, original_height = 1000, 1000
+                new_width, new_height = new_N * new_cell_size, new_N * new_cell_size
+                scale_width = new_width / original_width
+                scale_height = new_height / original_height
+                pygame.quit()
+                game_of_life_simulation(new_N, new_cell_size, scale_width, scale_height)
 
             if menu_button.draw(window):
                 return
@@ -189,4 +200,4 @@ def game_of_life_simulation(N, cell_size):
 
         pygame.time.Clock().tick(tick)
 
-# game_of_life_simulation(100, 10)
+#game_of_life_simulation(100, 10,1,1)

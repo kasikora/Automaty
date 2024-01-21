@@ -15,9 +15,7 @@ from tkinter import filedialog
 def sand_simulation(N, cell_size, scale_width, scale_height):
 
     pygame.init()
-    print('-------------------------------------')
-    print(scale_width, scale_height)
-    print('-------------------------------------')
+
     width, height = N * cell_size, N * cell_size
     button_window_width = width * 0.4
     window = pygame.display.set_mode((width + button_window_width, height))
@@ -235,5 +233,5 @@ def sand_simulation(N, cell_size, scale_width, scale_height):
         pygame.time.Clock().tick(tick)
 
 
-sand_simulation(100,7,1, 1)
+#sand_simulation(100,7,1, 1)
 

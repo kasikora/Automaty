@@ -37,7 +37,7 @@ while running:
 
         elif game_of_life_button.draw(screen):
             try:
-                game_of_life_simulation(100, 10)
+                game_of_life_simulation(100, 10,1, 1)
             except Exception as e:
                 print(f"Błąd: {e}")
         elif sand_simulator_button.draw(screen):
