@@ -2,10 +2,10 @@ import pygame
 import sys
 from trafic_alg import *
 import button
+from tkinter.simpledialog import askinteger
 
 
-
-def traffic_simulation(N, cell_size):
+def traffic_simulation(N, cell_size, density):
 
     pygame.init()
 
@@ -17,15 +17,15 @@ def traffic_simulation(N, cell_size):
         matrix[i, 10].neighbours.append(matrix[i + 1, 10])
     for i in range(N - 1):
         matrix[i + 1, 11].neighbours.append(matrix[i, 11])
-    spawners.add_spawner(Spawner(matrix[0, 10], frequency_spawn_percentage_chance=3))
-    spawners.add_spawner(Spawner(matrix[N - 1, 11], frequency_spawn_percentage_chance=3))
+    spawners.add_spawner(Spawner(matrix[0, 10], density))
+    spawners.add_spawner(Spawner(matrix[N - 1, 11], density))
 
     for i in range(N - 1):
         matrix[11, i].neighbours.append(matrix[11, i + 1])
     for i in range(N - 1):
         matrix[10, i + 1].neighbours.append(matrix[10, i])
-    spawners.add_spawner(Spawner(matrix[11, 0],3))
-    spawners.add_spawner(Spawner(matrix[10, N - 1], 3))
+    spawners.add_spawner(Spawner(matrix[11, 0], density))
+    spawners.add_spawner(Spawner(matrix[10, N - 1], density))
 
     cars = []
     for i in spawners.list_of_spawners:
@@ -82,16 +82,20 @@ def traffic_simulation(N, cell_size):
     simtype_img = pygame.image.load('texturepack/simtype_traffic.jpg').convert_alpha()
     clear_img = pygame.image.load('texturepack/clear_traffic.jpg').convert_alpha()
     menu_img = pygame.image.load('texturepack/menu.jpg').convert_alpha()
+    density_img = pygame.image.load('texturepack/density_traffic.jpg').convert_alpha()
 
     button_width = 100
     button_height = 50
     button_margin = 10
 
-    total_button_height = 3 * (button_height + button_margin)
+    total_button_height = 4 * (button_height + button_margin)
 
     simulation_button = button.Button(width + button_margin, (height - total_button_height) // 2, simtype_img, 0.8)
     reset_button = button.Button(width + button_margin, (height - total_button_height) // 2 + (button_height + button_margin), clear_img, 0.8)
-    menu_button = button.Button(width + button_margin, (height - total_button_height) // 2 + 2*(button_height + button_margin), menu_img, 0.8)
+    density_button = button.Button(width + button_margin, (height - total_button_height) // 2 + 2*(button_height + button_margin), density_img, 0.8)
+    menu_button = button.Button(width + button_margin,
+                                (height - total_button_height) // 2 + 3 * (button_height + button_margin), menu_img,
+                                0.8)
 
 
     custom_font = pygame.font.Font("texturepack/RetroGaming.ttf", 19)
@@ -110,7 +114,6 @@ def traffic_simulation(N, cell_size):
         topleft=(
             width + button_margin, button_margin * 4))
 
-    # Run the game loop
     while True:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -132,7 +135,16 @@ def traffic_simulation(N, cell_size):
                 # cars = new_alive_list(matrix, N)  # cos
 
             if menu_button.draw(window):
-                return
+                pygame.quit()
+
+
+
+            if density_button.draw(window):
+                new_density = askinteger("Traffic denity (default: 3, min: 1, max: 50)", "Enter percentage of car frequency spawning:")
+                pygame.quit()
+                if new_density < 1 or new_density >50:
+                    new_density = 3
+                traffic_simulation(N, cell_size, new_density)
 
 
         if continuos_sim == 1:
@@ -157,6 +169,7 @@ def traffic_simulation(N, cell_size):
 
         window.blit(text_space, text_space_rect)
         window.blit(text_space2, text_space2_rect)
+        # window.blit(text_input.get_surface(), (input_box.x + 5, input_box.y + 5))
 
         pygame.display.flip()
         pygame.time.Clock().tick(tick)

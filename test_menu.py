@@ -4,6 +4,7 @@ from GUILife import game_of_life_simulation
 from GUISand import sand_simulation
 from GUITraffic import traffic_simulation
 
+
 pygame.init()
 
 WIDTH, HEIGHT = 1200, 600
@@ -47,7 +48,7 @@ while running:
                 print(f"Błąd: {e}")
         elif traffic_simulator_button.draw(screen):
             try:
-                traffic_simulation(50, 20)
+                traffic_simulation(22, 20, 3)
             except Exception as e:
                 print(f"Błąd: {e}")
         elif exit_button.draw(screen):
