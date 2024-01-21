@@ -135,9 +135,7 @@ def traffic_simulation(N, cell_size, density):
                 # cars = new_alive_list(matrix, N)  # cos
 
             if menu_button.draw(window):
-                pygame.quit()
-
-
+                return
 
             if density_button.draw(window):
                 new_density = askinteger("Traffic denity (default: 3, min: 1, max: 50)", "Enter percentage of car frequency spawning:")
