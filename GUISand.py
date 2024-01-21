@@ -26,12 +26,13 @@ def sand_simulation(N, cell_size):
     resize_img = pygame.image.load('texturepack/resize_sand.jpg').convert_alpha()
     picture_img = pygame.image.load('texturepack/picture_sand.jpg').convert_alpha()
     clear_img = pygame.image.load('texturepack/clear_sand.jpg').convert_alpha()
+    menu_img = pygame.image.load('texturepack/menu.jpg').convert_alpha()
 
     button_width = 100
     button_height = 50
     button_margin = 20
 
-    total_button_height = 5 * (button_height + button_margin)
+    total_button_height = 6 * (button_height + button_margin)
 
     simulation_button = button.Button(width + button_margin, (height - total_button_height) // 2, simtype_img, 0.8)
     reset_button = button.Button(width + button_margin,
@@ -42,6 +43,9 @@ def sand_simulation(N, cell_size):
     picture_button = button.Button(width + button_margin,
                                    (height - total_button_height) // 2 + 3 * (button_height + button_margin), picture_img,
                                    0.8)
+    menu_button = button.Button(width + button_margin,
+                                (height - total_button_height) // 2 + 4 * (button_height + button_margin), menu_img,
+                                0.8)
 
     custom_font = pygame.font.Font("texturepack/RetroGaming.ttf", 25)
 
@@ -159,6 +163,9 @@ def sand_simulation(N, cell_size):
                         for j in range(N):
                             if matrix[i, j].val == 1:
                                 all_sand.append(matrix[i, j])
+
+            if menu_button.draw(window):
+                return
 
         if continuos_sim == 1:
             all_sand = let_them_fall3(all_sand)

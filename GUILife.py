@@ -30,12 +30,13 @@ def game_of_life_simulation(N, cell_size):
     minus_img = pygame.image.load('texturepack/minus_life.jpg').convert_alpha()
     picture_img = pygame.image.load('texturepack/picture_life.jpg').convert_alpha()
     clear_img = pygame.image.load('texturepack/clear_life.jpg').convert_alpha()
+    menu_img = pygame.image.load('texturepack/menu.jpg').convert_alpha()
 
     button_width = 100
     button_height = 50
     button_margin = 20
 
-    total_button_height = 7 * (button_height + button_margin)
+    total_button_height = 8 * (button_height + button_margin)
 
     simulation_button = button.Button(width + button_margin, (height - total_button_height) // 2, simtype_img, 0.8)
     minus_button = button.Button(width + button_margin, (height - total_button_height) // 2 + (button_height + button_margin), minus_img, 0.8)
@@ -43,6 +44,9 @@ def game_of_life_simulation(N, cell_size):
     reset_button = button.Button(width + button_margin, (height - total_button_height) // 2 + 3 * (button_height + button_margin), clear_img, 0.8)
     resize_button = button.Button(width + button_margin, (height - total_button_height) // 2 + 4 * (button_height + button_margin), resize_img, 0.8)
     picture_button = button.Button(width + button_margin, (height - total_button_height) // 2 + 5 * (button_height + button_margin), picture_img, 0.8)
+    menu_button = button.Button(width + button_margin,
+                                (height - total_button_height) // 2 + 6 * (button_height + button_margin), menu_img,
+                                0.8)
 
 
     custom_font = pygame.font.Font("texturepack/RetroGaming.ttf", 25)
@@ -126,6 +130,9 @@ def game_of_life_simulation(N, cell_size):
 
             if resize_button.draw(window):
                 print('dziala2')
+
+            if menu_button.draw(window):
+                return
 
             if picture_button.draw(window):
                 generation_count = 0

@@ -2,13 +2,14 @@ import pygame
 import button
 from GUILife import game_of_life_simulation
 from GUISand import sand_simulation
+from GUITraffic import traffic_simulation
 
 pygame.init()
 
 WIDTH, HEIGHT = 1200, 600
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
-pygame.display.set_caption("Menu w Pygame")
-start_img = pygame.image.load('start_btn.png').convert_alpha()
+pygame.display.set_caption("Automaty")
+
 game_of_life_image = pygame.image.load('texturepack/game_of_life_button.png').convert_alpha()
 sand_simulator_image = pygame.image.load('texturepack/sand_simulator_button.png').convert_alpha()
 traffic_simulator_image = pygame.image.load('texturepack/traffic_simulator_button.png').convert_alpha()
@@ -29,6 +30,7 @@ exit_button = button.Button(width_half - exit_image.get_rect().centerx*0.4, heig
 
 running = True
 while running:
+
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
@@ -40,12 +42,12 @@ while running:
                 print(f"Błąd: {e}")
         elif sand_simulator_button.draw(screen):
             try:
-                sand_simulation(100, 10, 1)
+                sand_simulation(100, 10)
             except Exception as e:
                 print(f"Błąd: {e}")
         elif traffic_simulator_button.draw(screen):
             try:
-                exec(open("trafic_alg.py").read())
+                traffic_simulation(22, 20)
             except Exception as e:
                 print(f"Błąd: {e}")
         elif exit_button.draw(screen):
