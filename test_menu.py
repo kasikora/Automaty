@@ -5,19 +5,27 @@ from GUISand import sand_simulation
 
 pygame.init()
 
-
-WIDTH, HEIGHT = 800, 800
+WIDTH, HEIGHT = 1200, 600
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption("Menu w Pygame")
 start_img = pygame.image.load('start_btn.png').convert_alpha()
+game_of_life_image = pygame.image.load('texturepack/game_of_life_button.png').convert_alpha()
+sand_simulator_image = pygame.image.load('texturepack/sand_simulator_button.png').convert_alpha()
+traffic_simulator_image = pygame.image.load('texturepack/traffic_simulator_button.png').convert_alpha()
+exit_image = pygame.image.load('texturepack/exit_button.png').convert_alpha()
 
+background_img = pygame.image.load('texturepack/bc6.jpg').convert_alpha()
+background_img = pygame.transform.scale(background_img, (WIDTH, HEIGHT))  # Zmiana rozmiaru tła
 WHITE = (255, 255, 255)
 BLACK = (0, 0, 0)
+width_half = WIDTH/2
+height_part = HEIGHT*0.7/4
+screen.blit(background_img, (0, 0))
 
-game_of_life_button = button.Button(300, 100, start_img, 0.8)
-sand_simulator_button = button.Button(300, 250, start_img, 0.8)
-traffic_simulator_button = button.Button(300, 400, start_img, 0.8)
-quit_button = button.Button(300, 550, start_img, 0.8)
+game_of_life_button = button.Button(width_half - game_of_life_image.get_rect().centerx*0.5, height_part, game_of_life_image, 0.5)
+sand_simulator_button = button.Button(width_half - sand_simulator_image.get_rect().centerx*0.4, height_part*2, sand_simulator_image, 0.4)
+traffic_simulator_button = button.Button(width_half - traffic_simulator_image.get_rect().centerx*0.4, height_part*3, traffic_simulator_image, 0.4)
+exit_button = button.Button(width_half - exit_image.get_rect().centerx*0.4, height_part*4, exit_image, 0.4)
 
 running = True
 while running:
@@ -25,31 +33,31 @@ while running:
         if event.type == pygame.QUIT:
             running = False
 
-        if game_of_life_button.draw(screen):
+        elif game_of_life_button.draw(screen):
             try:
                 game_of_life_simulation(100, 10)
             except Exception as e:
                 print(f"Błąd: {e}")
-        if sand_simulator_button.draw(screen):
+        elif sand_simulator_button.draw(screen):
             try:
-                sand_simulation(100, 10)
+                sand_simulation(100, 10, 1)
             except Exception as e:
                 print(f"Błąd: {e}")
-        if traffic_simulator_button.draw(screen):
+        elif traffic_simulator_button.draw(screen):
             try:
                 exec(open("trafic_alg.py").read())
             except Exception as e:
                 print(f"Błąd: {e}")
-        if quit_button.draw(screen):
+        elif exit_button.draw(screen):
             running = False
-        if event.type == pygame.KEYDOWN:
+        elif event.type == pygame.KEYDOWN:
             if event.key == pygame.K_r:  # Wciśnięcie klawisza "R" spowoduje zmianę rozdzielczości
                 new_width = 1600
                 new_height = 400
                 traffic_simulator_button.scaling(WIDTH, HEIGHT, new_width, new_height)
                 game_of_life_button.scaling(WIDTH, HEIGHT, new_width, new_height)
                 sand_simulator_button.scaling(WIDTH, HEIGHT, new_width, new_height)
-                quit_button.scaling(WIDTH, HEIGHT, new_width, new_height)
+                exit_button.scaling(WIDTH, HEIGHT, new_width, new_height)
                 WIDTH = new_width
                 HEIGHT = new_height
                 # Zakończ obecne okno
@@ -57,11 +65,13 @@ while running:
 
                 # Utwórz nowe okno z nowymi wymiarami
                 screen = pygame.display.set_mode((new_width, new_height))
-                current_width, current_height = new_width, new_height
+                background_img = pygame.transform.scale(background_img, (WIDTH, HEIGHT))  # Zmiana rozmiaru tła
+                screen.blit(background_img, (0, 0))
+
+    # Umieść tło na ekranie przed rysowaniem przycisków
+
+
 
     pygame.display.flip()
 
 pygame.quit()
-
-#def add_buttons(window_height, window_width, num_of_buttons):
-#    center =
