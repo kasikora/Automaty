@@ -1,5 +1,5 @@
 import random
-
+import copy
 import numpy
 
 numpy.set_printoptions(linewidth=256)
@@ -12,11 +12,12 @@ class Road:
         self.neighbours = []
 
         self.just_follow_the_orders = []
-        self.just_follow_the_orders_vector_direction = []
+        self.vectors = []
+        self.priority = 0
 
         self.from_entrance = None
         self.stop = False
-        self.coords = [i, j]
+        self.cords = [i, j]
 
         self.ahead = None
         self.left = None
@@ -40,42 +41,74 @@ class Road:
     def __repr__(self):
         return f"{self.has_car}"
 
-    def set_next_neighbour(self, neighbour=None):  # todo rozdnielic moze na 2
-        if neighbour is None:
-            if self.neighbours:
-                self.next_neighbour = random.choice(self.neighbours)
-                # print(self.next_neighbour, "qweqwe")
-            else:
-                print("No neighbours")
-        else:
-            self.next_neighbour = neighbour
+    # def set_next_neighbour(self, neighbour=None):  # todo rozdnielic moze na 2
+    #     if neighbour is None:
+    #         if self.neighbours:
+    #             self.next_neighbour = random.choice(self.neighbours)
+    #             # print(self.next_neighbour, "qweqwe")
+    #         else:
+    #             print("No neighbours")
+    #     else:
+    #         self.next_neighbour = neighbour
+    #
+    # def set_next_car_path(self):
+    #     if self.just_follow_the_orders:
+    #         self.next_neighbour.set_next_neighbour(self.just_follow_the_orders.pop(0))
+    #         self.next_neighbour.just_follow_the_orders = self.just_follow_the_orders.copy()
+    #         self.just_follow_the_orders = []
+    #     else:
+    #         self.next_neighbour.set_next_neighbour()
 
-    def set_next_car_path(self):
-        if self.just_follow_the_orders:
-            self.next_neighbour.set_next_neighbour(self.just_follow_the_orders.pop(0))
-            self.next_neighbour.just_follow_the_orders = self.just_follow_the_orders.copy()
-            self.just_follow_the_orders = []
-        else:
-            self.next_neighbour.set_next_neighbour()
-
+    # def drive(self):
+    #     # try:
+    #     if self.has_car:
+    #         if self.next_neighbour is not None:
+    #             if self.next_neighbour.has_car:
+    #                 # print("XD")
+    #                 return self
+    #             else:
+    #                 # print(":D")
+    #                 # self.next_neighbour.set_next_neighbour()
+    #                 self.next_neighbour.has_car = 1
+    #                 self.has_car = 0
+    #                 print(self.just_follow_the_orders)
+    #                 self.set_next_car_path()
+    #                 return self.next_neighbour
+    #         else:
+    #             print("Nowhere to go")
+    #             self.has_car = 0
     def drive(self):
-        # try:
         if self.has_car:
-            if self.next_neighbour is not None:
-                if self.next_neighbour.has_car:
-                    # print("XD")
-                    return self
-                else:
-                    # print(":D")
-                    # self.next_neighbour.set_next_neighbour()
-                    self.next_neighbour.has_car = 1
-                    self.has_car = 0
-                    print(self.just_follow_the_orders)
-                    self.set_next_car_path()
-                    return self.next_neighbour
+            if self.stop:
+                self.stop = False
+                print("stopped be magic")
+                return self
             else:
-                print("Nowhere to go")
-                self.has_car = 0
+                if self.just_follow_the_orders:
+                    if self.just_follow_the_orders[0].has_car:
+                        return self
+                    else:
+                        next_step = self.just_follow_the_orders.pop(0)
+                        next_step.has_car = 1
+                        next_step.just_follow_the_orders = self.just_follow_the_orders.copy()
+                        next_step.vectors = self.vectors.copy()
+                        next_step.priority = self.priority
+                        self.just_follow_the_orders = []
+                        self.vectors = [] # todo moze trzeba przywrucic
+                        self.has_car = 0
+                        return next_step
+                else:
+                    if self.neighbours:
+                        if self.neighbours[0].has_car:
+                            return self
+                        else:
+                            self.neighbours[0].has_car = 1
+                            self.has_car = 0
+                            return self.neighbours[0]
+                    else:
+                        self.has_car = 0
+                        print("No Neighbours")
+                        return None
 
     def drive2(self):
         if self.has_car:
@@ -87,12 +120,13 @@ class Road:
                     if self.just_follow_the_orders[0].has_car:
                         return self
                     else:
-                        tmp_neighbour = self.just_follow_the_orders.pop(0)
-                        tmp_neighbour.has_car = 1
-                        tmp_neighbour.just_follow_the_orders = self.just_follow_the_orders.copy()
+                        next_step = self.just_follow_the_orders.pop(0)
+                        next_step.has_car = 1
+                        next_step.just_follow_the_orders = self.just_follow_the_orders.copy()
+                        # print(self.just_follow_the_orders)
                         self.just_follow_the_orders = []
                         self.has_car = 0
-                        return tmp_neighbour
+                        return next_step
                 else:
                     if self.neighbours:
                         if self.neighbours[0].has_car:
@@ -126,21 +160,103 @@ class OmniPresentCrossroad:  # robienie tras w skrzyzowaniiach musza juz istniec
         self.my_roads = []
 
         self.entrance_object_list = []
+        self.paths_and_vectors = []
+
+    def create_paths_and_vectors(self):
+        for path in self.paths:
+            self.paths_and_vectors.append(OmniPresentCrossroad.PathAndVector(path.copy()))
+        print("created paths and vectors", self.paths_and_vectors)
+        print(len(self.paths_and_vectors))
+
+    class PathAndVector:
+        def __init__(self, path=[], copy=False):
+            self.path = path
+            self.direction_vectors = []
+            self.make_direction_vectors()
+            self.for_entrance = None
+            if self.path:
+                self.for_entrance = self.path.pop(0)
+            print("path_and_vector_constructor:")
+            print(self.path)
+            print(self.direction_vectors)
+
+        def pop_path(self):
+            self.direction_vectors.pop(0)
+            return self.path.pop(0)
+
+        def set_path(self, path):
+            self.path = path
+
+        def set_direction_vectors(self, vectors):
+            self.direction_vectors = vectors
+
+        def set_from_entrance(self, entrance):
+            self.for_entrance = entrance
+
+        def make_direction_vectors(self):
+            # list_of_cords = []
+            # for i_node in self.path:
+            #     for i in range(len(matrix)):
+            #         for j in range(len(matrix[i])):
+            #             if i_node is matrix[i, j]:
+            #                 list_of_cords.append([i, j])
+            # for i_node in range(len(list_of_cords) - 1):
+            #     i_vector = list_of_cords[i_node + 1][0] - list_of_cords[i_node][0]
+            #     j_vector = list_of_cords[i_node + 1][1] - list_of_cords[i_node][1]
+            #     self.direction_vectors.append([i_vector, j_vector])
+            self.direction_vectors = []
+            if self.path:
+                list_of_cords = []
+                for node in self.path:
+                    list_of_cords.append(node.cords)
+                for i_node in range(len(list_of_cords) - 1):
+                    i_vector = list_of_cords[i_node + 1][0] - list_of_cords[i_node][0]
+                    j_vector = list_of_cords[i_node + 1][1] - list_of_cords[i_node][1]
+                    self.direction_vectors.append([i_vector, j_vector])  # todo zoacz czy dziala
 
     class Entrance:
         def __init__(self, entrance_road):
             self.entrance_road = entrance_road
-            self.paths = []
+            self.paths_entr = []
+            self.priority = 0
+
+            self.paths_and_vectors = []
+
+        def set_paths_and_vectors(self, all_paths_and_vectors):
+            self.paths_and_vectors = []
+            for path_and_vectors in all_paths_and_vectors:
+                if path_and_vectors.for_entrance is self.entrance_road:
+                    print(path_and_vectors.path)
+                    self.paths_and_vectors.append(path_and_vectors)  # todo sprawdzic czy nie trzeba copy()
+            print(self.paths_and_vectors)
+
+        def set_path_and_vectors_in_car(self):
+            if self.entrance_road.has_car and not self.entrance_road.just_follow_the_orders:
+                chosen_one = random.choice(self.paths_and_vectors)
+                self.entrance_road.just_follow_the_orders = chosen_one.path.copy()
+                self.entrance_road.vectors = chosen_one.direction_vectors.copy()
+                self.entrance_road.priority = self.priority
 
         def set_paths(self, all_paths):
+            self.paths_entr = []
             for path in all_paths:
                 if path[0] is self.entrance_road:
-                    self.paths.append(path)
+                    self.paths_entr.append(path)
+            # print(self.paths_entr)
+
+        def set_path_in_car(self):
+            if self.entrance_road.has_car and not self.entrance_road.just_follow_the_orders:
+                # self.entrance_road.just_follow_the_orders = random.choice(self.paths)[1:].copy()
+                path = random.choice(self.paths_entr)
+                self.entrance_road.just_follow_the_orders = path[1:].copy()
 
     def create_entrance_object_list(self):
+        self.entrance_object_list = []
         for entrance in self.all_entrance:
             tmp_entrance = OmniPresentCrossroad.Entrance(entrance)
             tmp_entrance.set_paths(self.paths)
+            # todo testowac
+            tmp_entrance.set_paths_and_vectors(self.paths_and_vectors)
             self.entrance_object_list.append(tmp_entrance)
 
     def add_entrance(self, crossroad_entrance):
@@ -173,16 +289,17 @@ class OmniPresentCrossroad:  # robienie tras w skrzyzowaniiach musza juz istniec
             tmp_path.append(entrance)
             self.function(tmp_path)
         print(self.paths, "\n", len(self.paths))
-        self.create_entrance_object_list()
+        # self.create_entrance_object_list()
 
     def remove_path(self, entrance_object, exit_object):
+        print(self.paths)
         for i in range(len(self.paths)):
             if self.paths[i][0] is entrance_object and self.paths[i][-1] is exit_object:
                 self.paths.pop(i)
                 print(len(self.paths))
                 break
 
-    def give_orders(self):
+    def give_orders_old(self):
         for entrance in self.all_entrance:
             if entrance.has_car and not entrance.just_follow_the_orders:
                 # path.pop(0)
@@ -195,6 +312,11 @@ class OmniPresentCrossroad:  # robienie tras w skrzyzowaniiach musza juz istniec
                 # entrance.just_follow_the_orders = path[2:].copy()
                 # entrance.set_next_car_path()
                 # entrance.from_entrance = path[0]
+
+    def give_orders(self):
+        for entrance in self.entrance_object_list:
+            # entrance.set_path_in_car()
+            entrance.set_path_and_vectors_in_car()
 
     def create_my_roads(self):
         for path in self.paths:
@@ -216,18 +338,27 @@ class OmniPresentCrossroad:  # robienie tras w skrzyzowaniiach musza juz istniec
                         colliding_node_dict[node].append([car_index, node_index])
                     else:
                         colliding_node_dict[node] = [[car_index, node_index]]
-        for node in colliding_node_dict:
+        print(colliding_node_dict)
+        for node in colliding_node_dict.values():  # values daje tylko nieKlucze a items daje w klucza i nieklucza
             for n1 in node:
                 for n2 in node:
                     if n1 is not n2:
-
-                        a = self.my_roads[n1[0]].just_follow_the_orders[n1[1]].coords
-                        b = self.my_roads[n2[0]].just_follow_the_orders[n2[1]].coords
+                        print(len(self.my_roads[n1[0]].just_follow_the_orders))
+                        print(len(self.my_roads[n1[0]].vectors))
+                        a = self.my_roads[n1[0]].vectors[n1[1]]
+                        b = self.my_roads[n2[0]].vectors[n2[1]]
                         c = a[1] * b[0] - a[0] * b[1]
-                        if c[1] == 1:
-                            self.my_roads[n2[0]].stop = True
-                        if c[1] == -1:
+                        print(c)
+                        # if c == 1:
+                        #     self.my_roads[n2[0]].stop = True
+                        if c == -1:
                             self.my_roads[n1[0]].stop = True
+                        # if n1[1] > 0:
+                        #     a = self.my_roads[n1[0]].vectors[n1[1]-1]
+                        #     b = self.my_roads[n2[0]].vectors[n2[1]]
+                        #     c = a[1] * b[0] - a[0] * b[1]
+                        #     if c == -1:
+                        #         self.my_roads[n1[0]].stop = True
 
         # for car1 in cars:
         #     for car2 in cars:
@@ -305,7 +436,7 @@ def cars_go(cars):
     new_cars = []
     while len(cars):
         ten = random.randint(0, len(cars) - 1)
-        new_cars.append(cars[ten].drive2())
+        new_cars.append(cars[ten].drive())
         if new_cars[-1] is None:
             new_cars.pop(-1)
         cars.pop(ten)

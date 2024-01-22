@@ -20,15 +20,15 @@ for i in range(N - 1):
     matrix[i, 10].neighbours.append(matrix[i + 1, 10])
 for i in range(N - 1):
     matrix[i + 1, 11].neighbours.append(matrix[i, 11])
-spawners.add_spawner(Spawner(matrix[0, 10], frequency_spawn_percentage_chance=3))
-spawners.add_spawner(Spawner(matrix[N - 1, 11], frequency_spawn_percentage_chance=3))
+spawners.add_spawner(Spawner(matrix[0, 10], frequency_spawn_percentage_chance=20))
+#spawners.add_spawner(Spawner(matrix[N - 1, 11], frequency_spawn_percentage_chance=3))
 
 for i in range(N - 1):
     matrix[11, i].neighbours.append(matrix[11, i + 1])
 for i in range(N - 1):
     matrix[10, i + 1].neighbours.append(matrix[10, i])
-spawners.add_spawner(Spawner(matrix[11, 0], 3))
-spawners.add_spawner(Spawner(matrix[10, N - 1], 3))
+spawners.add_spawner(Spawner(matrix[11, 0], 20))
+#spawners.add_spawner(Spawner(matrix[10, N - 1], 3))
 
 cars = []
 for i in spawners.list_of_spawners:
@@ -53,9 +53,15 @@ crossroad1.remove_path(matrix[10, 15], matrix[11, 15])
 crossroad1.remove_path(matrix[15, 11], matrix[15, 10])
 crossroad1.remove_path(matrix[11, 6], matrix[10, 6])
 
+crossroad1.create_paths_and_vectors()
+crossroad1.create_entrance_object_list()
+
+crossroad1.create_my_roads()
+
+
 width, height = N * cell_size, N * cell_size
 window = pygame.display.set_mode((width, height))
-pygame.display.set_caption("Sand Simulator")
+pygame.display.set_caption("AAAaaaAA_A_A_A_AAaaaaa__AAAA")
 
 # initial_board = black_and_white("3.JPG", "11.jpg", N)
 
@@ -81,6 +87,7 @@ while True:
         if event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE:
             spawners.spawn_all(cars)
             crossroad1.give_orders()
+            crossroad1.right_hand_rule()
             cars = cars_go(cars)
 
         if event.type == pygame.KEYDOWN and event.key == pygame.K_F10:
@@ -95,6 +102,7 @@ while True:
     if continuos_sim == 1:
         spawners.spawn_all(cars)
         crossroad1.give_orders()
+        crossroad1.right_hand_rule()
         cars = cars_go(cars)
 
     window.fill(black)
