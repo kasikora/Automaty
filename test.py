@@ -171,8 +171,8 @@ def next_matrix2(matrix):
 print("------------")
 
 #  i   j
-a=[-1,  0]
-b=[0, 1]
+a=[-1,  1]
+b=[1, 1]
 # todo matma na to czy przyjechal z prawej czy z lewej
 c=[0,0]
 c[0]=a[0]*b[0]+a[1]*b[1]

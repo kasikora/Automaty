@@ -89,6 +89,7 @@ class Road:
                         return self
                     else:
                         next_step = self.just_follow_the_orders.pop(0)
+                        self.vectors.pop(0)
                         next_step.has_car = 1
                         next_step.just_follow_the_orders = self.just_follow_the_orders.copy()
                         next_step.vectors = self.vectors.copy()
@@ -348,10 +349,10 @@ class OmniPresentCrossroad:  # robienie tras w skrzyzowaniiach musza juz istniec
                         a = self.my_roads[n1[0]].vectors[n1[1]]
                         b = self.my_roads[n2[0]].vectors[n2[1]]
                         c = a[1] * b[0] - a[0] * b[1]
-                        print(c)
+                        print("angle",c)
                         # if c == 1:
                         #     self.my_roads[n2[0]].stop = True
-                        if c == -1:
+                        if c < 0:
                             self.my_roads[n1[0]].stop = True
                         # if n1[1] > 0:
                         #     a = self.my_roads[n1[0]].vectors[n1[1]-1]
