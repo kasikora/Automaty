@@ -24,8 +24,8 @@ def traffic_simulation(N, cell_size, density):
         matrix[11, i].neighbours.append(matrix[11, i + 1])
     for i in range(N - 1):
         matrix[10, i + 1].neighbours.append(matrix[10, i])
-    spawners.add_spawner(Spawner(matrix[11, 0], density))
-    spawners.add_spawner(Spawner(matrix[10, N - 1], density))
+    #spawners.add_spawner(Spawner(matrix[11, 0], density))
+    #spawners.add_spawner(Spawner(matrix[10, N - 1], density))
 
     cars = []
     for i in spawners.list_of_spawners:
@@ -44,6 +44,15 @@ def traffic_simulation(N, cell_size, density):
     crossroad1.add_exit(matrix[10, 6])
 
     crossroad1.create_paths()
+
+    crossroad1.remove_path(matrix[6, 10], matrix[6, 11])
+    crossroad1.remove_path(matrix[10, 15], matrix[11, 15])
+    crossroad1.remove_path(matrix[15, 11], matrix[15, 10])
+    crossroad1.remove_path(matrix[11, 6], matrix[10, 6])
+
+    crossroad1.create_paths_and_vectors()
+    crossroad1.create_entrance_object_list()
+    crossroad1.create_my_roads()
 
     width, height = N * cell_size, N * cell_size
     window = pygame.display.set_mode((width + 400, height))
@@ -72,10 +81,10 @@ def traffic_simulation(N, cell_size, density):
         for j in range(N):
             if matrix[i, j].neighbours:
                 if matrix[i, j] not in draw_road:
-                    draw_road.append(matrix[i, j].coords)
+                    draw_road.append(matrix[i, j].cords)
                 for neighbour in matrix[i, j].neighbours:
                     if neighbour not in draw_road:
-                        draw_road.append(neighbour.coords)
+                        draw_road.append(neighbour.cords)
 
     game_area = window.subsurface(pygame.Rect((0, 0, width, height)))
 
@@ -123,6 +132,7 @@ def traffic_simulation(N, cell_size, density):
             if event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE:
                 spawners.spawn_all(cars)
                 crossroad1.give_orders()
+                crossroad1.right_hand_rule()
                 cars = cars_go(cars)
 
             if simulation_button.draw(window) or (event.type == pygame.KEYDOWN and event.key == pygame.K_F10):
@@ -148,6 +158,7 @@ def traffic_simulation(N, cell_size, density):
         if continuos_sim == 1:
             spawners.spawn_all(cars)
             crossroad1.give_orders()
+            crossroad1.right_hand_rule()
             cars = cars_go(cars)
 
         game_area.fill(green)
@@ -173,3 +184,4 @@ def traffic_simulation(N, cell_size, density):
         pygame.time.Clock().tick(tick)
 
 
+# traffic_simulation(22, 20 , 10)

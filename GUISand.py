@@ -189,10 +189,11 @@ def sand_simulation(N, cell_size, scale_width, scale_height):
                     for i in range(N):
                         for j in range(N):
                             matrix[i, j].val = 1 if initial_board[i, j] == 1 else 0
-                    for i in range(N):
-                        for j in range(N):
-                            if matrix[i, j].val == 1:
-                                all_sand.append(matrix[i, j])
+                    all_sand = new_alive_list(matrix, N)
+                    # for i in range(N):
+                    #     for j in range(N):
+                    #         if matrix[i, j].val == 1:
+                    #             all_sand.append(matrix[i, j])
 
             if menu_button.draw(window):
                 return

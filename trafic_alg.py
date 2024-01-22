@@ -325,12 +325,7 @@ class OmniPresentCrossroad:  # robienie tras w skrzyzowaniiach musza juz istniec
                 if node not in self.my_roads:
                     self.my_roads.append(node)
 
-    def right_hand_rule(self):  # todo wymyslic skad wziac kierunek sciezki
-        # cars = []
-        # for node in
-        #     if node.has_car:
-        #         cars.append(node)
-
+    def right_hand_rule(self):
         colliding_node_dict = {}
         for car_index, road in enumerate(self.my_roads):
             if road.has_car:
@@ -344,22 +339,22 @@ class OmniPresentCrossroad:  # robienie tras w skrzyzowaniiach musza juz istniec
             for n1 in node:
                 for n2 in node:
                     if n1 is not n2:
-                        print(len(self.my_roads[n1[0]].just_follow_the_orders))
-                        print(len(self.my_roads[n1[0]].vectors))
-                        a = self.my_roads[n1[0]].vectors[n1[1]]
-                        b = self.my_roads[n2[0]].vectors[n2[1]]
-                        c = a[1] * b[0] - a[0] * b[1]
-                        print("angle",c)
-                        # if c == 1:
-                        #     self.my_roads[n2[0]].stop = True
-                        if c < 0:
-                            self.my_roads[n1[0]].stop = True
-                        # if n1[1] > 0:
-                        #     a = self.my_roads[n1[0]].vectors[n1[1]-1]
-                        #     b = self.my_roads[n2[0]].vectors[n2[1]]
-                        #     c = a[1] * b[0] - a[0] * b[1]
-                        #     if c == -1:
-                        #         self.my_roads[n1[0]].stop = True
+                        if n1[1] == n2[1] or n1[1]+1 == n2[1]:# and len(self.my_roads[n1[0]].neighbours)>1:
+                            print(n1[1], n2[1])
+                            a = self.my_roads[n1[0]].vectors[n1[1]]
+                            b = self.my_roads[n2[0]].vectors[n2[1]]
+                            c = a[1] * b[0] - a[0] * b[1]
+                            print("angle",c)
+                            # if c == 1:
+                            #     self.my_roads[n2[0]].stop = True
+                            if c < 0:
+                                self.my_roads[n1[0]].stop = True
+                            # if n1[1] > 0:
+                            #     a = self.my_roads[n1[0]].vectors[n1[1]-1]
+                            #     b = self.my_roads[n2[0]].vectors[n2[1]]
+                            #     c = a[1] * b[0] - a[0] * b[1]
+                            #     if c == -1:
+                            #         self.my_roads[n1[0]].stop = True
 
         # for car1 in cars:
         #     for car2 in cars:

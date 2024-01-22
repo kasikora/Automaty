@@ -21,13 +21,13 @@ for i in range(N - 1):
 for i in range(N - 1):
     matrix[i + 1, 11].neighbours.append(matrix[i, 11])
 spawners.add_spawner(Spawner(matrix[0, 10], frequency_spawn_percentage_chance=20))
-#spawners.add_spawner(Spawner(matrix[N - 1, 11], frequency_spawn_percentage_chance=3))
+spawners.add_spawner(Spawner(matrix[N - 1, 11], frequency_spawn_percentage_chance=20))
 
 for i in range(N - 1):
     matrix[11, i].neighbours.append(matrix[11, i + 1])
 for i in range(N - 1):
     matrix[10, i + 1].neighbours.append(matrix[10, i])
-spawners.add_spawner(Spawner(matrix[11, 0], 20))
+#spawners.add_spawner(Spawner(matrix[11, 0], 20))
 #spawners.add_spawner(Spawner(matrix[10, N - 1], 3))
 
 cars = []
@@ -55,7 +55,6 @@ crossroad1.remove_path(matrix[11, 6], matrix[10, 6])
 
 crossroad1.create_paths_and_vectors()
 crossroad1.create_entrance_object_list()
-
 crossroad1.create_my_roads()
 
 
