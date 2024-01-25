@@ -95,7 +95,7 @@ class Road:
                         next_step.vectors = self.vectors.copy()
                         next_step.priority = self.priority
                         self.just_follow_the_orders = []
-                        self.vectors = [] # todo moze trzeba przywrucic
+                        self.vectors = []  # todo moze trzeba przywrucic
                         self.has_car = 0
                         return next_step
                 else:
@@ -339,12 +339,12 @@ class OmniPresentCrossroad:  # robienie tras w skrzyzowaniiach musza juz istniec
             for n1 in node:
                 for n2 in node:
                     if n1 is not n2:
-                        if n1[1] == n2[1] or n1[1]+1 == n2[1]:# and len(self.my_roads[n1[0]].neighbours)>1:
+                        if n1[1] == n2[1] or n1[1] + 1 == n2[1]:  # and len(self.my_roads[n1[0]].neighbours)>1:
                             print(n1[1], n2[1])
                             a = self.my_roads[n1[0]].vectors[n1[1]]
                             b = self.my_roads[n2[0]].vectors[n2[1]]
                             c = a[1] * b[0] - a[0] * b[1]
-                            print("angle",c)
+                            print("angle", c)
                             # if c == 1:
                             #     self.my_roads[n2[0]].stop = True
                             if c < 0:
@@ -417,6 +417,27 @@ class SpawnersListObject:
     def spawn_all(self, car_list):
         for spawner in self.list_of_spawners:
             spawner.spawn(car_list)
+
+
+class Signalization:
+    def __init__(self, time_read=30, time_green=30, starting_state=False):
+        self.time_read = time_read
+        self.time_green = time_green
+        self.road_object = None
+
+        self.current_state = starting_state
+        if starting_state is False:
+            self.iterator = 0
+        else:
+            self.iterator = self.time_read + 1
+
+    def cycle(self):
+        self.iterator = self.iterator + 1
+        self.iterator = self.iterator % (self.time_green + self.time_read)
+        if self.iterator > self.time_read:
+            self.current_state = 1
+        else:
+            self.current_state = 0
 
 
 def make_road_matrix(N):
