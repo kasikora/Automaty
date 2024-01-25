@@ -339,7 +339,7 @@ class OmniPresentCrossroad:  # robienie tras w skrzyzowaniiach musza juz istniec
             for n1 in node:
                 for n2 in node:
                     if n1 is not n2:
-                        if n1[1] == n2[1] or n1[1] + 1 == n2[1]:  # and len(self.my_roads[n1[0]].neighbours)>1:
+                        if n1[1] <= n2[1] <= n1[1] + 1 and len(self.my_roads[n1[0]].neighbours) < 2:
                             print(n1[1], n2[1])
                             a = self.my_roads[n1[0]].vectors[n1[1]]
                             b = self.my_roads[n2[0]].vectors[n2[1]]
@@ -420,10 +420,10 @@ class SpawnersListObject:
 
 
 class Signalization:
-    def __init__(self, time_read=30, time_green=30, starting_state=False):
+    def __init__(self, road_object, time_read=30, time_green=30, starting_state=False):
         self.time_read = time_read
         self.time_green = time_green
-        self.road_object = None
+        self.road_object = road_object
 
         self.current_state = starting_state
         if starting_state is False:
@@ -436,8 +436,22 @@ class Signalization:
         self.iterator = self.iterator % (self.time_green + self.time_read)
         if self.iterator > self.time_read:
             self.current_state = 1
+            self.road_object.drive = True
         else:
             self.current_state = 0
+            self.road_object.drive = False
+
+
+class SignalizationObjectList:
+    def __init__(self):
+        self.list_of_lights = []
+
+    def all_lights_cycle(self):
+        for light in self.list_of_lights:
+            light.cycle()
+
+    def add_light(self, signalization_object):
+        self.list_of_lights.append(signalization_object)
 
 
 def make_road_matrix(N):

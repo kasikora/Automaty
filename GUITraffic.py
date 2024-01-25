@@ -150,7 +150,7 @@ def traffic_simulation(N, cell_size, density):
             if density_button.draw(window):
                 new_density = askinteger("Traffic denity (default: 3, min: 1, max: 50)", "Enter percentage of car frequency spawning:")
                 pygame.quit()
-                if new_density < 1 or new_density >50:
+                if new_density < 1 or new_density > 50:
                     new_density = 3
                 traffic_simulation(N, cell_size, new_density)
 
@@ -166,6 +166,10 @@ def traffic_simulation(N, cell_size, density):
         for road_coords in draw_road:
             rect = pygame.Rect(road_coords[1] * cell_size, road_coords[0] * cell_size, cell_size, cell_size)
             pygame.draw.rect(window, grey, rect)
+
+        for i in range(N + 1): # todo AHTUNG SKASOWAC
+            pygame.draw.line(game_area, grey, (i * cell_size, 0), (i * cell_size, height), 1)
+            pygame.draw.line(game_area, grey, (0, i * cell_size), (width, i * cell_size), 1)
 
         for i in range(N):
             for j in range(N):
@@ -184,4 +188,4 @@ def traffic_simulation(N, cell_size, density):
         pygame.time.Clock().tick(tick)
 
 
-# traffic_simulation(22, 20 , 10)
+traffic_simulation(22, 20 , 25)

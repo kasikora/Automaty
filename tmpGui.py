@@ -20,8 +20,8 @@ for i in range(N - 1):
     matrix[i, 10].neighbours.append(matrix[i + 1, 10])
 for i in range(N - 1):
     matrix[i + 1, 11].neighbours.append(matrix[i, 11])
-spawners.add_spawner(Spawner(matrix[0, 10], frequency_spawn_percentage_chance=20))
-spawners.add_spawner(Spawner(matrix[N - 1, 11], frequency_spawn_percentage_chance=20))
+spawners.add_spawner(Spawner(matrix[0, 10], frequency_spawn_percentage_chance=25))
+spawners.add_spawner(Spawner(matrix[N - 1, 11], frequency_spawn_percentage_chance=25))
 
 for i in range(N - 1):
     matrix[11, i].neighbours.append(matrix[11, i + 1])
@@ -36,15 +36,15 @@ for i in spawners.list_of_spawners:
 
 crossroad1 = OmniPresentCrossroad()
 
-crossroad1.add_entrance(matrix[6, 10])
-crossroad1.add_entrance(matrix[10, 15])
-crossroad1.add_entrance(matrix[15, 11])
-crossroad1.add_entrance(matrix[11, 6])
+crossroad1.add_entrance(matrix[5, 10])
+crossroad1.add_entrance(matrix[10, 16])
+crossroad1.add_entrance(matrix[16, 11])
+crossroad1.add_entrance(matrix[11, 5])
 
-crossroad1.add_exit(matrix[6, 11])
-crossroad1.add_exit(matrix[11, 15])
-crossroad1.add_exit(matrix[15, 10])
-crossroad1.add_exit(matrix[10, 6])
+crossroad1.add_exit(matrix[5, 11])
+crossroad1.add_exit(matrix[11, 16])
+crossroad1.add_exit(matrix[16, 10])
+crossroad1.add_exit(matrix[10, 5])
 
 crossroad1.create_paths()
 
