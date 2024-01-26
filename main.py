@@ -14,7 +14,7 @@ def main():
         elif choice == "sand_simulation":
             sand_simulation(100, 7, 1, 1)
         elif choice == "traffic_simulation":
-            traffic_simulation(40, 20, 6)
+            traffic_simulation(40, 20, 3)
 
         elif choice == "exit":
             break

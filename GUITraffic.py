@@ -244,4 +244,4 @@ def traffic_simulation(N, cell_size, density):
         pygame.time.Clock().tick(tick)
 
 
-traffic_simulation(40, 20, 6)
+# traffic_simulation(40, 20, 6)
