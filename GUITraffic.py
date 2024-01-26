@@ -37,7 +37,7 @@ def traffic_simulation(N, cell_size, density):
     crossroad1.add_entrance(matrix[15, 11])
     crossroad1.add_entrance(matrix[11, 6])
     crossroad1.add_light(OmniPresentCrossroad.Signalization(matrix[9, 10],cords=[9, 10], starting_state=False))
-    crossroad1.add_light(OmniPresentCrossroad.Signalization(matrix[9, 12],cords=[9, 12], starting_state=True))
+    crossroad1.add_light(OmniPresentCrossroad.Signalization(matrix[10, 12],cords=[10, 12], starting_state=True))
     crossroad1.add_light(OmniPresentCrossroad.Signalization(matrix[12, 11],cords=[12, 11], starting_state=False))
     crossroad1.add_light(OmniPresentCrossroad.Signalization(matrix[11, 9],cords=[11, 9], starting_state=True))
 
@@ -67,6 +67,8 @@ def traffic_simulation(N, cell_size, density):
     grey = (50, 50, 50)
     yellow = (204, 204, 0)
     green = (204, 204, 255)
+    red = (255, 0, 0)
+    greenreal = (0, 255, 0)
     blue = (0, 0, 255)
     lightblue = (204, 219, 255)
 
@@ -157,8 +159,6 @@ def traffic_simulation(N, cell_size, density):
                 new_density = askinteger("Traffic denity (default: 3, min: 1, max: 50)",
                                          "Enter percentage of car frequency spawning:")
                 pygame.quit()
-                if new_density < 1 or new_density > 50:
-                    new_density = 3
                 traffic_simulation(N, cell_size, new_density)
 
         if continuos_sim == 1:
@@ -175,18 +175,24 @@ def traffic_simulation(N, cell_size, density):
             rect = pygame.Rect(road_coords[1] * cell_size, road_coords[0] * cell_size, cell_size, cell_size)
             pygame.draw.rect(window, grey, rect)
 
-        for i in range(N + 1):  # todo AHTUNG SKASOWAC
-            pygame.draw.line(game_area, grey, (i * cell_size, 0), (i * cell_size, height), 1)
-            pygame.draw.line(game_area, grey, (0, i * cell_size), (width, i * cell_size), 1)
+        for light_object in crossroad1.lights:
+            if light_object.current_state == 1:
+                rectl = pygame.Rect(light_object.cords[1] * cell_size, light_object.cords[0] * cell_size, cell_size, cell_size)
+                pygame.draw.rect(window, greenreal, rectl)
+            else:
+                rectl = pygame.Rect(light_object.cords[1] * cell_size, light_object.cords[0] * cell_size, cell_size,
+                                    cell_size)
+                pygame.draw.rect(window, red, rectl)
+
 
         for i in range(N):
             for j in range(N):
                 if matrix[i, j].has_car == 1:
-                    rect_outer = pygame.Rect(j * cell_size, i * cell_size, cell_size, cell_size)
+                    # rect_outer = pygame.Rect(j * cell_size, i * cell_size, cell_size, cell_size)
                     rect_inner = pygame.Rect(j * cell_size + 3, i * cell_size + 3, cell_size - 6, cell_size - 6)
 
-                    pygame.draw.rect(window, black, rect_outer)
-                    pygame.draw.rect(window, blue, rect_inner)
+                    # pygame.draw.rect(window, black, rect_outer)
+                    pygame.draw.rect(window, white, rect_inner)
 
         window.blit(text_space, text_space_rect)
         window.blit(text_space2, text_space2_rect)
