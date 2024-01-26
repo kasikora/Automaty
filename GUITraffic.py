@@ -6,9 +6,7 @@ from tkinter.simpledialog import askinteger
 
 
 def traffic_simulation(N, cell_size, density):
-
     pygame.init()
-
 
     matrix = make_road_matrix(N)
     spawners = SpawnersListObject()
@@ -24,19 +22,24 @@ def traffic_simulation(N, cell_size, density):
         matrix[11, i].neighbours.append(matrix[11, i + 1])
     for i in range(N - 1):
         matrix[10, i + 1].neighbours.append(matrix[10, i])
-    #spawners.add_spawner(Spawner(matrix[11, 0], density))
-    #spawners.add_spawner(Spawner(matrix[10, N - 1], density))
+    spawners.add_spawner(Spawner(matrix[11, 0], density))
+    spawners.add_spawner(Spawner(matrix[10, N - 1], density))
 
     cars = []
     for i in spawners.list_of_spawners:
         print(i)
 
     crossroad1 = OmniPresentCrossroad()
+    #all_signalization = SignalizationObjectList()
 
     crossroad1.add_entrance(matrix[6, 10])
     crossroad1.add_entrance(matrix[10, 15])
     crossroad1.add_entrance(matrix[15, 11])
     crossroad1.add_entrance(matrix[11, 6])
+    crossroad1.add_light(OmniPresentCrossroad.Signalization(matrix[9, 10],cords=[9, 10], starting_state=False))
+    crossroad1.add_light(OmniPresentCrossroad.Signalization(matrix[9, 12],cords=[9, 12], starting_state=True))
+    crossroad1.add_light(OmniPresentCrossroad.Signalization(matrix[12, 11],cords=[12, 11], starting_state=False))
+    crossroad1.add_light(OmniPresentCrossroad.Signalization(matrix[11, 9],cords=[11, 9], starting_state=True))
 
     crossroad1.add_exit(matrix[6, 11])
     crossroad1.add_exit(matrix[11, 15])
@@ -53,11 +56,11 @@ def traffic_simulation(N, cell_size, density):
     crossroad1.create_paths_and_vectors()
     crossroad1.create_entrance_object_list()
     crossroad1.create_my_roads()
-
+    crossroad1.set_influence_area_for_lights_priority()
+    crossroad1.create_unstuck(matrix)
     width, height = N * cell_size, N * cell_size
     window = pygame.display.set_mode((width + 400, height))
     pygame.display.set_caption("Road traffic simulator")
-
 
     black = (0, 0, 0)
     white = (200, 200, 200)
@@ -65,8 +68,7 @@ def traffic_simulation(N, cell_size, density):
     yellow = (204, 204, 0)
     green = (204, 204, 255)
     blue = (0, 0, 255)
-    lightblue= (204, 219, 255)
-
+    lightblue = (204, 219, 255)
 
     # Variable to track mouse state
     drawing = False
@@ -75,7 +77,7 @@ def traffic_simulation(N, cell_size, density):
     tick = 10
     press = 0
 
-    draw_road =[]
+    draw_road = []
 
     for i in range(N):
         for j in range(N):
@@ -100,12 +102,14 @@ def traffic_simulation(N, cell_size, density):
     total_button_height = 4 * (button_height + button_margin)
 
     simulation_button = button.Button(width + button_margin, (height - total_button_height) // 2, simtype_img, 0.8)
-    reset_button = button.Button(width + button_margin, (height - total_button_height) // 2 + (button_height + button_margin), clear_img, 0.8)
-    density_button = button.Button(width + button_margin, (height - total_button_height) // 2 + 2*(button_height + button_margin), density_img, 0.8)
+    reset_button = button.Button(width + button_margin,
+                                 (height - total_button_height) // 2 + (button_height + button_margin), clear_img, 0.8)
+    density_button = button.Button(width + button_margin,
+                                   (height - total_button_height) // 2 + 2 * (button_height + button_margin),
+                                   density_img, 0.8)
     menu_button = button.Button(width + button_margin,
                                 (height - total_button_height) // 2 + 3 * (button_height + button_margin), menu_img,
                                 0.8)
-
 
     custom_font = pygame.font.Font("texturepack/RetroGaming.ttf", 19)
 
@@ -133,6 +137,8 @@ def traffic_simulation(N, cell_size, density):
                 spawners.spawn_all(cars)
                 crossroad1.give_orders()
                 crossroad1.right_hand_rule()
+                crossroad1.unstuck.unstuck()
+                crossroad1.all_lights_cycle()
                 cars = cars_go(cars)
 
             if simulation_button.draw(window) or (event.type == pygame.KEYDOWN and event.key == pygame.K_F10):
@@ -148,17 +154,19 @@ def traffic_simulation(N, cell_size, density):
                 return
 
             if density_button.draw(window):
-                new_density = askinteger("Traffic denity (default: 3, min: 1, max: 50)", "Enter percentage of car frequency spawning:")
+                new_density = askinteger("Traffic denity (default: 3, min: 1, max: 50)",
+                                         "Enter percentage of car frequency spawning:")
                 pygame.quit()
                 if new_density < 1 or new_density > 50:
                     new_density = 3
                 traffic_simulation(N, cell_size, new_density)
 
-
         if continuos_sim == 1:
             spawners.spawn_all(cars)
             crossroad1.give_orders()
             crossroad1.right_hand_rule()
+            crossroad1.unstuck.unstuck()  # wolac przed swiatlami
+            crossroad1.all_lights_cycle()
             cars = cars_go(cars)
 
         game_area.fill(green)
@@ -167,7 +175,7 @@ def traffic_simulation(N, cell_size, density):
             rect = pygame.Rect(road_coords[1] * cell_size, road_coords[0] * cell_size, cell_size, cell_size)
             pygame.draw.rect(window, grey, rect)
 
-        for i in range(N + 1): # todo AHTUNG SKASOWAC
+        for i in range(N + 1):  # todo AHTUNG SKASOWAC
             pygame.draw.line(game_area, grey, (i * cell_size, 0), (i * cell_size, height), 1)
             pygame.draw.line(game_area, grey, (0, i * cell_size), (width, i * cell_size), 1)
 
@@ -188,4 +196,4 @@ def traffic_simulation(N, cell_size, density):
         pygame.time.Clock().tick(tick)
 
 
-traffic_simulation(22, 20 , 25)
+traffic_simulation(22, 20, 15)

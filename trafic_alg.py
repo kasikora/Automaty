@@ -163,12 +163,118 @@ class OmniPresentCrossroad:  # robienie tras w skrzyzowaniiach musza juz istniec
         self.entrance_object_list = []
         self.paths_and_vectors = []
 
+        self.unstuck = None
+
+        self.lights = []
+
+    def create_unstuck(self, matrix):
+        self.unstuck = OmniPresentCrossroad.Unstuck(self.my_roads, matrix)
+
     def create_paths_and_vectors(self):
         for path in self.paths:
             self.paths_and_vectors.append(OmniPresentCrossroad.PathAndVector(path.copy()))
         print("created paths and vectors", self.paths_and_vectors)
         print(len(self.paths_and_vectors))
 
+    class Unstuck:
+        def __init__(self, roads, matrix):  # todo moze sie uda automatyczne wejscia i wyjscia z tego
+            self.roads = roads
+            self.old_roads_has_car = []
+            for road in self.roads:
+                self.old_roads_has_car.append(road.has_car)
+
+            # for road in roads:
+            #     if len(road.neighbours) > 1:
+            #         # road.has_car = 1  # todo skasowac bo nie bedzie sie dzialac
+            #         self.roads.append(road)  # to jest git
+            # self.unstuck_points = []
+            # for road in self.roads:
+            #     for i in matrix:
+            #         for j in i:
+            #             if road in j.neighbours and len(j.neighbours) == 1:
+            #                 # j.has_car = 1  # todo skasowac bo nie bedzie sie dzialac
+            #                 self.unstuck_points.append(j)
+            # print("UNSTUCK: ")
+            # print(self.unstuck_points)
+            # print(self.roads)
+
+        def save_has_car_values(self):
+            self.old_roads_has_car = []
+            for road in self.roads:
+                self.old_roads_has_car.append(road.has_car)
+
+        def unstuck(self):
+            for i in range(len(self.roads)):
+                if self.roads[i].has_car != self.old_roads_has_car[i]:
+                    self.save_has_car_values()
+                    return
+            print("unstucking")
+            random.shuffle(self.roads)
+            tmp_counter = 2
+            for node in self.roads:
+                if node.just_follow_the_orders:
+                    if not node.just_follow_the_orders[0].has_car and node.has_car:
+                        # if not tmp_counter: # odkomentowac zeby sie nie zapychalo shrzyzowanie
+                        #     break
+                        # tmp_counter = tmp_counter - 1
+                        node.stop = False
+            # tmp_cat_list = random.choices(self.roads, k=3)
+            # for car in tmp_cat_list:
+            #     car.stop = False
+            # self.save_has_car_values()
+
+            # for node in self.roads:
+            #     if node.has_car != 0:
+            #         return
+            # print("unstucking")
+            # tmp = random.choice(self.roads)
+            # tmp.stop = False
+
+    def set_influence_area_for_lights_priority(self):
+        for light in self.lights:
+            for path in self.paths:
+                if light.road_object in path:
+                    for node in path:
+                        if not len(node.neighbours) > 1:
+                            light.influence_area.append(node)
+                            break
+
+    def all_lights_cycle(self):
+        for light in self.lights:
+            light.cycle()
+
+    def add_light(self, signalization_object):
+        self.lights.append(signalization_object)
+
+    class Signalization:
+        def __init__(self, road_object, time_red=60, time_green=60, starting_state=False, cords=[None, None]):
+            self.time_red = time_red
+            self.time_green = time_green
+            self.road_object = road_object
+
+            self.cords = cords
+
+            self.priority = 3
+            self.influence_area = []
+
+            self.current_state = starting_state
+            if starting_state is False:
+                self.iterator = 0
+            else:
+                self.iterator = self.time_red + 1
+
+        def cycle(self):
+            self.iterator = self.iterator + 1
+            self.iterator = self.iterator % (self.time_green + self.time_red)
+            if self.iterator > self.time_red:
+                self.current_state = 1
+                for node in self.influence_area:
+                    node.priority = self.priority
+            else:
+                self.current_state = 0
+                self.road_object.stop = True
+                for node in self.influence_area:
+                    node.priority = 0
     class PathAndVector:
         def __init__(self, path=[], copy=False):
             self.path = path
@@ -337,6 +443,7 @@ class OmniPresentCrossroad:  # robienie tras w skrzyzowaniiach musza juz istniec
         print(colliding_node_dict)
         for node in colliding_node_dict.values():  # values daje tylko nieKlucze a items daje w klucza i nieklucza
             for n1 in node:
+                # if self.my_roads[n1[0]] in self.unstuck.unstuck_points:
                 for n2 in node:
                     if n1 is not n2:
                         if n1[1] <= n2[1] <= n1[1] + 1 and len(self.my_roads[n1[0]].neighbours) < 2:
@@ -347,8 +454,9 @@ class OmniPresentCrossroad:  # robienie tras w skrzyzowaniiach musza juz istniec
                             print("angle", c)
                             # if c == 1:
                             #     self.my_roads[n2[0]].stop = True
-                            if c < 0:
-                                self.my_roads[n1[0]].stop = True
+                            if self.my_roads[n1[0]].priority <= self.my_roads[n2[0]].priority:
+                                if c < 0:
+                                    self.my_roads[n1[0]].stop = True
                             # if n1[1] > 0:
                             #     a = self.my_roads[n1[0]].vectors[n1[1]-1]
                             #     b = self.my_roads[n2[0]].vectors[n2[1]]
@@ -419,39 +527,39 @@ class SpawnersListObject:
             spawner.spawn(car_list)
 
 
-class Signalization:
-    def __init__(self, road_object, time_read=30, time_green=30, starting_state=False):
-        self.time_read = time_read
-        self.time_green = time_green
-        self.road_object = road_object
-
-        self.current_state = starting_state
-        if starting_state is False:
-            self.iterator = 0
-        else:
-            self.iterator = self.time_read + 1
-
-    def cycle(self):
-        self.iterator = self.iterator + 1
-        self.iterator = self.iterator % (self.time_green + self.time_read)
-        if self.iterator > self.time_read:
-            self.current_state = 1
-            self.road_object.drive = True
-        else:
-            self.current_state = 0
-            self.road_object.drive = False
-
-
-class SignalizationObjectList:
-    def __init__(self):
-        self.list_of_lights = []
-
-    def all_lights_cycle(self):
-        for light in self.list_of_lights:
-            light.cycle()
-
-    def add_light(self, signalization_object):
-        self.list_of_lights.append(signalization_object)
+# class Signalization:
+#     def __init__(self, road_object, time_red=30, time_green=30, starting_state=False):
+#         self.time_red = time_red
+#         self.time_green = time_green
+#         self.road_object = road_object
+#
+#         self.current_state = starting_state
+#         if starting_state is False:
+#             self.iterator = 0
+#         else:
+#             self.iterator = self.time_red + 1
+#
+#     def cycle(self):
+#         self.iterator = self.iterator + 1
+#         self.iterator = self.iterator % (self.time_green + self.time_red)
+#         if self.iterator > self.time_red:
+#             # self.current_state = 1
+#             pass
+#         else:
+#             # self.current_state = 0
+#             self.road_object.stop = True
+#
+#
+# class SignalizationObjectList:
+#     def __init__(self):
+#         self.list_of_lights = []
+#
+#     def all_lights_cycle(self):
+#         for light in self.list_of_lights:
+#             light.cycle()
+#
+#     def add_light(self, signalization_object):
+#         self.list_of_lights.append(signalization_object)
 
 
 def make_road_matrix(N):
