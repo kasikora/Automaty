@@ -5,6 +5,21 @@ import numpy
 numpy.set_printoptions(linewidth=256)
 
 
+class CrosroadListObject:
+    def __init__(self):
+        self.crossroads_list = []
+
+    def add_crossroad(self, crossroad):
+        self.crossroads_list.append(crossroad)
+
+    def run_func(self):
+        for crossroad in self.crossroads_list:
+            crossroad.give_orders()
+            crossroad.right_hand_rule()
+            crossroad.unstuck.unstuck()  # wolac przed swiatlami
+            crossroad.all_lights_cycle()
+
+
 class Road:
     def __init__(self, i=None, j=None):
         self.has_car = 0
@@ -182,6 +197,7 @@ class OmniPresentCrossroad:  # robienie tras w skrzyzowaniiach musza juz istniec
             self.old_roads_has_car = []
             for road in self.roads:
                 self.old_roads_has_car.append(road.has_car)
+            print("CREATED UNSTUCK _____________________________________________________________________________________")
 
             # for road in roads:
             #     if len(road.neighbours) > 1:
@@ -275,6 +291,7 @@ class OmniPresentCrossroad:  # robienie tras w skrzyzowaniiach musza juz istniec
                 self.road_object.stop = True
                 for node in self.influence_area:
                     node.priority = 0
+
     class PathAndVector:
         def __init__(self, path=[], copy=False):
             self.path = path

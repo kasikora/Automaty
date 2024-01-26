@@ -25,30 +25,29 @@ def traffic_simulation(N, cell_size, density):
     spawners.add_spawner(Spawner(matrix[11, 0], density))
     spawners.add_spawner(Spawner(matrix[10, N - 1], density))
 
-#druga droga
+    # druga droga
     for i in range(N - 1):
-        matrix[i, 10+20].neighbours.append(matrix[i + 1, 10+20])
+        matrix[i, 10 + 20].neighbours.append(matrix[i + 1, 10 + 20])
     for i in range(N - 1):
-        matrix[i + 1, 11+20].neighbours.append(matrix[i, 11+20])
-    spawners.add_spawner(Spawner(matrix[0, 10+20], density))
-    spawners.add_spawner(Spawner(matrix[N - 1, 11+20], density))
+        matrix[i + 1, 11 + 20].neighbours.append(matrix[i, 11 + 20])
+    spawners.add_spawner(Spawner(matrix[0, 10 + 20], density))
+    spawners.add_spawner(Spawner(matrix[N - 1, 11 + 20], density))
 
     cars = []
     for i in spawners.list_of_spawners:
         print(i)
 
     crossroad1 = OmniPresentCrossroad()
-    #all_signalization = SignalizationObjectList()
-
+    # all_signalization = SignalizationObjectList()
 
     crossroad1.add_entrance(matrix[6, 10])
     crossroad1.add_entrance(matrix[10, 15])
     crossroad1.add_entrance(matrix[15, 11])
     crossroad1.add_entrance(matrix[11, 6])
-    crossroad1.add_light(OmniPresentCrossroad.Signalization(matrix[9, 10],cords=[9, 10], starting_state=False))
-    crossroad1.add_light(OmniPresentCrossroad.Signalization(matrix[10, 12],cords=[10, 12], starting_state=True))
-    crossroad1.add_light(OmniPresentCrossroad.Signalization(matrix[12, 11],cords=[12, 11], starting_state=False))
-    crossroad1.add_light(OmniPresentCrossroad.Signalization(matrix[11, 9],cords=[11, 9], starting_state=True))
+    crossroad1.add_light(OmniPresentCrossroad.Signalization(matrix[9, 10], cords=[9, 10], starting_state=False))
+    crossroad1.add_light(OmniPresentCrossroad.Signalization(matrix[10, 12], cords=[10, 12], starting_state=True))
+    crossroad1.add_light(OmniPresentCrossroad.Signalization(matrix[12, 11], cords=[12, 11], starting_state=False))
+    crossroad1.add_light(OmniPresentCrossroad.Signalization(matrix[11, 9], cords=[11, 9], starting_state=True))
 
     crossroad1.add_exit(matrix[6, 11])
     crossroad1.add_exit(matrix[11, 15])
@@ -69,21 +68,21 @@ def traffic_simulation(N, cell_size, density):
     crossroad1.create_unstuck(matrix)
 
     crossroad2 = OmniPresentCrossroad()
-    crossroad2.add_entrance(matrix[6, 10+20])
-    crossroad2.add_entrance(matrix[10, 15+20])
-    crossroad2.add_entrance(matrix[15, 11+20])
-    crossroad2.add_entrance(matrix[11, 6+20])
-    crossroad2.add_exit(matrix[6, 11+20])
-    crossroad2.add_exit(matrix[11, 15+20])
-    crossroad2.add_exit(matrix[15, 10+20])
-    crossroad2.add_exit(matrix[10, 6+20])
+    crossroad2.add_entrance(matrix[6, 10 + 20])
+    crossroad2.add_entrance(matrix[10, 15 + 20])
+    crossroad2.add_entrance(matrix[15, 11 + 20])
+    crossroad2.add_entrance(matrix[11, 6 + 20])
+    crossroad2.add_exit(matrix[6, 11 + 20])
+    crossroad2.add_exit(matrix[11, 15 + 20])
+    crossroad2.add_exit(matrix[15, 10 + 20])
+    crossroad2.add_exit(matrix[10, 6 + 20])
 
     crossroad2.create_paths()
 
-    crossroad2.remove_path(matrix[6, 10+20], matrix[6, 11+20])
-    crossroad2.remove_path(matrix[10, 15+20], matrix[11, 15+20])
-    crossroad2.remove_path(matrix[15, 11+20], matrix[15, 10+20])
-    crossroad2.remove_path(matrix[11, 6+20], matrix[10, 6+20])
+    crossroad2.remove_path(matrix[6, 10 + 20], matrix[6, 11 + 20])
+    crossroad2.remove_path(matrix[10, 15 + 20], matrix[11, 15 + 20])
+    crossroad2.remove_path(matrix[15, 11 + 20], matrix[15, 10 + 20])
+    crossroad2.remove_path(matrix[11, 6 + 20], matrix[10, 6 + 20])
 
     crossroad2.create_paths_and_vectors()
     crossroad2.create_entrance_object_list()
@@ -91,6 +90,9 @@ def traffic_simulation(N, cell_size, density):
     crossroad2.set_influence_area_for_lights_priority()
     crossroad2.create_unstuck(matrix)
 
+    all_crossroads = CrosroadListObject()
+    all_crossroads.add_crossroad(crossroad1)
+    all_crossroads.add_crossroad(crossroad2)
 
     width, height = N * cell_size, N * cell_size
     window = pygame.display.set_mode((width + 400, height))
@@ -171,14 +173,6 @@ def traffic_simulation(N, cell_size, density):
 
             if event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE:
                 spawners.spawn_all(cars)
-                crossroad1.give_orders()
-                crossroad1.right_hand_rule()
-                crossroad1.unstuck.unstuck()
-                crossroad1.all_lights_cycle()
-                crossroad2.give_orders()
-                crossroad2.right_hand_rule()
-                crossroad2.unstuck.unstuck()
-                crossroad2.all_lights_cycle()
                 cars = cars_go(cars)
 
             if simulation_button.draw(window) or (event.type == pygame.KEYDOWN and event.key == pygame.K_F10):
@@ -201,14 +195,7 @@ def traffic_simulation(N, cell_size, density):
 
         if continuos_sim == 1:
             spawners.spawn_all(cars)
-            crossroad1.give_orders()
-            crossroad1.right_hand_rule()
-            crossroad1.unstuck.unstuck()  # wolac przed swiatlami
-            crossroad1.all_lights_cycle()
-            crossroad2.give_orders()
-            crossroad2.right_hand_rule()
-            crossroad2.unstuck.unstuck()
-            crossroad2.all_lights_cycle()
+            all_crossroads.run_func()
             cars = cars_go(cars)
 
         game_area.fill(green)
@@ -219,13 +206,13 @@ def traffic_simulation(N, cell_size, density):
 
         for light_object in crossroad1.lights:
             if light_object.current_state == 1:
-                rectl = pygame.Rect(light_object.cords[1] * cell_size, light_object.cords[0] * cell_size, cell_size, cell_size)
+                rectl = pygame.Rect(light_object.cords[1] * cell_size, light_object.cords[0] * cell_size, cell_size,
+                                    cell_size)
                 pygame.draw.rect(window, greenreal, rectl)
             else:
                 rectl = pygame.Rect(light_object.cords[1] * cell_size, light_object.cords[0] * cell_size, cell_size,
                                     cell_size)
                 pygame.draw.rect(window, red, rectl)
-
 
         for i in range(N):
             for j in range(N):
@@ -244,4 +231,4 @@ def traffic_simulation(N, cell_size, density):
         pygame.time.Clock().tick(tick)
 
 
-# traffic_simulation(40, 20, 6)
+traffic_simulation(40, 20, 15)
